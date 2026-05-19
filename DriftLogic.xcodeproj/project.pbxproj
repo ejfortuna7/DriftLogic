@@ -7,14 +7,26 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		136530E5B471C77267ABEC1D /* RigRationale.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25661CC745A26ABB805F12E /* RigRationale.swift */; };
+		1DA544990BE34E637277851A /* WhyThisRigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F1C74E7FA53E93079BFFDE /* WhyThisRigView.swift */; };
 		1E42C0D851C75D52FBC9F9AF /* RigRecommendationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCA6A2A177C98F42A70ECF6B /* RigRecommendationView.swift */; };
+		569AED35C4C535957AD13606 /* FlyPatternPhotoLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 292F7FB97DADFD1D345EDB49 /* FlyPatternPhotoLibrary.swift */; };
+		9480A34C70EABA6F1170B5D5 /* WaterTempGuidance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6709D184DFDD9EA575E43688 /* WaterTempGuidance.swift */; };
+		C41BBDC4CABC33521A6DFE21 /* FlyPatternGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76FA81B2485FC0B6051005A4 /* FlyPatternGalleryView.swift */; };
 		CCB16B74EA8C645635A884A2 /* FlyFishingRigModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CEB57CCD972509C905FAFB /* FlyFishingRigModels.swift */; };
 		F08C912788FAEA2A6EF8DEBD /* DriftLogicApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4947F99074C4226326815949 /* DriftLogicApp.swift */; };
+		F0DFBA3D59437D16E20C03FD /* FishingConditionDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688DA34ECD02B6AAA521BFC0 /* FishingConditionDefinitions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		292F7FB97DADFD1D345EDB49 /* FlyPatternPhotoLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyPatternPhotoLibrary.swift; sourceTree = "<group>"; };
 		4947F99074C4226326815949 /* DriftLogicApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriftLogicApp.swift; sourceTree = "<group>"; };
+		51F1C74E7FA53E93079BFFDE /* WhyThisRigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhyThisRigView.swift; sourceTree = "<group>"; };
+		6709D184DFDD9EA575E43688 /* WaterTempGuidance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterTempGuidance.swift; sourceTree = "<group>"; };
+		688DA34ECD02B6AAA521BFC0 /* FishingConditionDefinitions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FishingConditionDefinitions.swift; sourceTree = "<group>"; };
+		76FA81B2485FC0B6051005A4 /* FlyPatternGalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyPatternGalleryView.swift; sourceTree = "<group>"; };
 		90A984C3199CE41C6290E15E /* DriftLogic.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = DriftLogic.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B25661CC745A26ABB805F12E /* RigRationale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RigRationale.swift; sourceTree = "<group>"; };
 		C9CEB57CCD972509C905FAFB /* FlyFishingRigModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyFishingRigModels.swift; sourceTree = "<group>"; };
 		FCA6A2A177C98F42A70ECF6B /* RigRecommendationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RigRecommendationView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -49,7 +61,11 @@
 		9C2DC15E0AF32FAD9DF05996 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				688DA34ECD02B6AAA521BFC0 /* FishingConditionDefinitions.swift */,
 				C9CEB57CCD972509C905FAFB /* FlyFishingRigModels.swift */,
+				292F7FB97DADFD1D345EDB49 /* FlyPatternPhotoLibrary.swift */,
+				B25661CC745A26ABB805F12E /* RigRationale.swift */,
+				6709D184DFDD9EA575E43688 /* WaterTempGuidance.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -57,7 +73,9 @@
 		D3D6F0C03120471ADCE8710F /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				76FA81B2485FC0B6051005A4 /* FlyPatternGalleryView.swift */,
 				FCA6A2A177C98F42A70ECF6B /* RigRecommendationView.swift */,
+				51F1C74E7FA53E93079BFFDE /* WhyThisRigView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -116,8 +134,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				F08C912788FAEA2A6EF8DEBD /* DriftLogicApp.swift in Sources */,
+				F0DFBA3D59437D16E20C03FD /* FishingConditionDefinitions.swift in Sources */,
 				CCB16B74EA8C645635A884A2 /* FlyFishingRigModels.swift in Sources */,
+				C41BBDC4CABC33521A6DFE21 /* FlyPatternGalleryView.swift in Sources */,
+				569AED35C4C535957AD13606 /* FlyPatternPhotoLibrary.swift in Sources */,
+				136530E5B471C77267ABEC1D /* RigRationale.swift in Sources */,
 				1E42C0D851C75D52FBC9F9AF /* RigRecommendationView.swift in Sources */,
+				9480A34C70EABA6F1170B5D5 /* WaterTempGuidance.swift in Sources */,
+				1DA544990BE34E637277851A /* WhyThisRigView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

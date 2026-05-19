@@ -28,10 +28,14 @@ enum WaterDepth: String, CaseIterable, Identifiable {
     var id: String { rawValue }
 }
 
+/// Water temperature bands aligned with common fly-fishing references
+/// (trout feeding/stress thresholds, steelhead tributary behavior, bass activity charts, inshore redfish ranges).
 enum WaterTemp: String, CaseIterable, Identifiable {
+    case frigid = "Frigid"
     case cold = "Cold"
-    case cool = "Cool"
+    case prime = "Prime"
     case warm = "Warm"
+    case hot = "Hot"
 
     var id: String { rawValue }
 }
@@ -60,6 +64,7 @@ struct RigRecommendation: Equatable {
     let leader: String
     let tippet: String
     let flyType: String
+    let rationale: RigRationale
     let proTip: String
 }
 
@@ -112,12 +117,21 @@ final class RigDecisionEngine {
             turbidity: turbidity,
             species: species
         )
+        let rationale = RigRationaleBuilder.build(
+            waterType: waterType,
+            current: current,
+            depth: depth,
+            temp: temp,
+            turbidity: turbidity,
+            species: species
+        )
 
         return RigRecommendation(
             flyLine: line,
             leader: leader,
             tippet: tippet,
             flyType: fly,
+            rationale: rationale,
             proTip: tip
         )
     }
@@ -240,15 +254,15 @@ final class RigDecisionEngine {
 
         switch (turbidity, depth, current) {
         case (.clear, .shallow, .slow), (.clear, .shallow, .still):
-            return temp == .cold ? "6X–7X fluorocarbon" : "5X–6X fluorocarbon"
+            return temp.isFrigidOrCold ? "6X–7X fluorocarbon" : "5X–6X fluorocarbon"
         case (.clear, _, _):
-            return "5X–6X fluorocarbon"
+            return temp.isFrigidOrCold ? "6X fluorocarbon" : "5X–6X fluorocarbon"
         case (.muddy, _, _), (_, .deep, .fast):
             return "2X–3X fluorocarbon or nylon"
         case (.stained, .deep, _), (.stained, _, .fast):
             return "3X–4X fluorocarbon"
         default:
-            return temp == .warm ? "4X–5X nylon" : "4X–5X fluorocarbon"
+            return temp.isWarmOrHot ? "4X–5X nylon" : "4X–5X fluorocarbon"
         }
     }
 
@@ -265,50 +279,78 @@ final class RigDecisionEngine {
         switch species {
         case .steelhead:
             switch (temp, turbidity) {
-            case (.cold, _), (.cool, .clear):
-                return "Egg patterns, small stonefly nymphs, or swung intruders"
+            case (.frigid, _), (.cold, _):
+                return "Egg patterns, small stonefly nymphs (#10–14), or micro intruders—dead-drifted slow"
+            case (.prime, _), (.warm, .clear):
+                return "Spey flies, swung intruders, or egg-sucking leeches (#4–8)"
             case (_, .muddy):
                 return "Large dark intruders or rubber-leg stonefly (#2–6)"
+            case (.hot, _):
+                return "Dark swung streamers and compact intruders in shaded runs (#2–6)"
             default:
-                return "Spey flies, soft hackles, or egg-sucking leeches"
+                return "Soft hackles, egg patterns, or compact Spey patterns (#6–10)"
             }
         case .redfish:
-            return turbidity == .clear
-                ? "Clouser minnow, crab, or shrimp (#4–2)"
-                : "Chartreuse/white Clouser or spoon fly"
+            switch temp {
+            case .frigid, .cold:
+                return turbidity == .clear
+                    ? "Clouser or shrimp (#4–2) on intermediate tip—deeper potholes and channels"
+                    : "Chartreuse/white Clouser (#2–1) with slow strip"
+            case .hot:
+                return turbidity == .clear
+                    ? "Crab or shrimp (#4–2)—prioritize dawn flood tides and grass edges"
+                    : "Chartreuse/white Clouser with loud strip near deeper mangrove shade"
+            default:
+                return turbidity == .clear
+                    ? "Clouser minnow, crab, or shrimp (#4–2)"
+                    : "Chartreuse/white Clouser or spoon fly"
+            }
         case .bassPanfish:
             switch (depth, temp) {
-            case (.shallow, .warm):
-                return "Poppers, foam ants, or damselfly dries"
+            case (.shallow, .prime), (.shallow, .warm), (.shallow, .hot):
+                return "Poppers, foam ants, or damselfly dries (#6–12)"
+            case (_, .frigid), (_, .cold):
+                return "Slow Woolly Bugger or jig-style streamer (#6–10) along deep banks"
             case (.deep, _):
                 return "Woolly Bugger, Clouser, or crayfish (#6–2)"
             default:
-                return "Woolly Bugger or conehead streamer"
+                return "Woolly Bugger or conehead streamer with pause-strip retrieve"
             }
         case .trout:
             break
         }
 
         switch (turbidity, depth, current, temp) {
+        case (.clear, .shallow, .slow, .hot), (.clear, .shallow, .still, .hot):
+            return "Large hopper or damselfly dry at first light only (#8–12)—avoid midday trout stress"
+        case (.clear, .shallow, .slow, .warm), (.clear, .shallow, .still, .warm):
+            return "Parachute Adams, elk hair caddis, or terrestrials (#14–18)—fish early and late"
+        case (.clear, .shallow, .slow, .prime), (.clear, .shallow, .still, .prime):
+            return "Parachute Adams, elk hair caddis, or BWO dry (#14–18)"
         case (.clear, .shallow, .slow, _), (.clear, .shallow, .still, _):
-            return temp == .warm
-                ? "Parachute Adams, elk hair caddis, or terrestrials (#14–18)"
-                : "Blue-winged olive or midge dry (#18–22)"
-        case (.clear, _, .slow, .cold), (.clear, _, .still, .cold):
+            return "Blue-winged olive or midge dry (#18–22)"
+        case (.clear, _, .slow, _), (.clear, _, .still, _) where temp.isFrigidOrCold:
             return "Zebra midge, RS2, or small emerger (#18–22)"
         case (.muddy, _, _, _), (_, .deep, .fast, _):
             return "Large rubber-leg stonefly, Woolly Bugger, or articulated streamer (#4–8)"
         case (.stained, .deep, _, _), (.stained, _, .moderate, _):
             return "Beadhead prince, Pat's Rubber Legs, or conehead streamer (#8–12)"
-        case (_, .midDepth, _, .cool):
+        case (_, .midDepth, _, .prime), (_, .midDepth, _, .warm):
             return "Pheasant tail, hare's ear, or soft hackle (#14–18)"
+        case (_, .midDepth, _, _) where temp.isFrigidOrCold:
+            return "Beadhead pheasant tail, zebra midge, or egg (#16–22)"
         default:
             switch waterType {
             case .smallStream:
-                return "High-riding dry or small attractor nymph (#14–16)"
+                return temp.isWarmOrHot
+                    ? "Foam beetle or hopper in shade (#12–14)"
+                    : "High-riding dry or small attractor nymph (#14–16)"
             case .largeRiver:
                 return current == .fast ? "Heavy stonefly nymph (#6–10)" : "Dry-dropper (caddis + beadhead)"
             case .lakeStillwater:
+                if temp.isFrigidOrCold {
+                    return "Chironomid under indicator (#18–22) or slow leech on intermediate"
+                }
                 return depth == .shallow ? "Callibaetis or chironomid (#14–16)" : "Leach or damsel nymph (#10–12)"
             case .coastalFlats:
                 return "Shrimp or crab pattern (#6–4)"
@@ -326,13 +368,32 @@ final class RigDecisionEngine {
         turbidity: Turbidity,
         species: TargetSpecies
     ) -> String {
+        if species == .trout, temp == .hot {
+            return "Water above ~75°F is poor for trout welfare. If you must fish, use only cool morning hours in spring seeps—otherwise switch target species or location."
+        }
+        if species == .trout, temp.troutElevatedStress {
+            return "Above ~68°F trout stress quickly—fish at dawn, use barbless hooks, and keep fish wet. Prefer nymphs in aerated riffles over long fights on dries."
+        }
+
         switch species {
         case .steelhead:
-            return "Focus on soft presentations at holding lies; swing flies slow and broad across the current. Dawn and overcast days often outperform bright midday sun."
+            if temp.isFrigidOrCold {
+                return "In cold trib water, dead-drift eggs through the slow heart of pools—swing speed should be barely perceptible."
+            }
+            if temp.isPrime {
+                return "Prime steelhead temps (~45–58°F): swing flies broad and slow across tailouts and riffle heads."
+            }
+            return "Focus on soft presentations at holding lies; dawn and overcast days outperform bright midday sun."
         case .redfish:
-            return "Lead cruising fish by several feet and strip slowly on the flats. Match crab and shrimp colors to bottom tone—lighter sand, darker grass."
+            if temp.isFrigidOrCold {
+                return "Below ~70°F, blind-cast deeper mangrove edges and potholes—redfish leave skinny flats until afternoons warm."
+            }
+            return "Lead cruising fish by several feet and strip slowly on the flats. Match crab and shrimp colors to bottom tone."
         case .bassPanfish:
-            return "Work structure edges at dawn and dusk. In warm shallows, pause poppers two seconds before the first strip to draw aggressive topwater strikes."
+            if temp.isPrime || temp.isWarmOrHot {
+                return "Work structure edges at dawn and dusk. Pause poppers two seconds before the first strip in warm shallows."
+            }
+            return "Cold bass need slow retrieves—tick bottom with a Woolly Bugger on a sink-tip near wood and rock."
         case .trout:
             break
         }
@@ -348,16 +409,16 @@ final class RigDecisionEngine {
             return "Count flies down to the feeding zone and mend aggressively to keep depth. Vary sink time until you tick bottom occasionally."
         default:
             switch (waterType, temp) {
-            case (.smallStream, .cold):
-                return "Target slow tailouts and foam lines. Trout stack in softer water when metabolism drops in cold temps."
-            case (.lakeStillwater, .warm):
-                return "Retrieve leeches on an intermediate line with a figure-eight hand twist near weed beds. Watch for cruising fish in the top two feet at dawn."
+            case (.smallStream, _) where temp.isFrigidOrCold:
+                return "Target slow tailouts and foam lines. Trout stack in softer water when metabolism drops below ~50°F."
+            case (.lakeStillwater, _) where temp.isWarmOrHot:
+                return "Retrieve leeches on an intermediate line with a figure-eight twist near weed beds. Watch for cruisers in the top two feet at dawn."
             case (.largeRiver, _) where current == .fast:
                 return "High-stick or tight-line nymph through pocket water. Add split shot until the fly ticks occasionally without hanging up."
             case (.coastalFlats, _):
-                return "Poling into position beats wading noise. Keep sun at your back and present flies ahead of moving fish, not on top of them."
+                return "Poling into position beats wading noise. Keep sun at your back and present flies ahead of moving fish."
             default:
-                return "Adjust weight and leader length until the fly drifts naturally at fish depth. Observe rise forms and surface insects before changing patterns."
+                return "Adjust weight and leader length until the fly drifts naturally at fish depth. Match fly size to \(temp.fahrenheitRange) metabolism."
             }
         }
     }
