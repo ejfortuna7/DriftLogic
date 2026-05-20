@@ -35,7 +35,7 @@ enum ConditionCategory: String {
         case .depth:
             return "How deep fish are holding determines line sink, weight, and fly style."
         case .waterTemperature:
-            return "Use a stream or pool thermometer in the water you are fishing—not the weather app air temperature. Fish respond to water heat; air temp alone often misleads (spring mornings, tailwaters, deep lakes)."
+            return "Water in the run or flat you'll fish—not the weather app."
         case .clarity:
             return "Visibility affects how well fish see your tippet and whether you go subtle or bold."
         case .target:
@@ -208,11 +208,11 @@ extension WaterDepth: FishingCondition {
 extension WaterTemp: FishingCondition {
     var displayName: String {
         switch self {
-        case .frigid: return "Frigid water (under 42°F)"
-        case .cold: return "Cold water (42–50°F)"
-        case .prime: return "Prime water (50–64°F)"
-        case .warm: return "Warm water (64–75°F)"
-        case .hot: return "Hot water (above 75°F)"
+        case .frigid: return "Frigid"
+        case .cold: return "Cold"
+        case .prime: return "Prime"
+        case .warm: return "Warm"
+        case .hot: return "Hot"
         }
     }
 
@@ -230,13 +230,13 @@ extension WaterTemp: FishingCondition {
         case .hot:
             base = "Mid-summer heat—focus on dawn/dusk, deep shade, or species that tolerate heat (bass, redfish); trout stress rises sharply above ~68°F."
         }
-        return "\(base) Range: \(fahrenheitRange)."
+        return base
     }
 
     var howToIdentify: String {
         switch self {
         case .frigid:
-            return "Submerged thermometer below 42°F in the run you plan to fish—not the air reading on your phone."
+            return "Below 42°F on a stream thermometer in the run you plan to fish."
         case .cold:
             return "42–50°F on a stream thermometer; breath visible, trout in soft water, bass still slow on flats."
         case .prime:
@@ -244,14 +244,9 @@ extension WaterTemp: FishingCondition {
         case .warm:
             return "64–75°F—hopper and damselfly season on lakes; redfish aggressive on flats; trout fishing best early/late."
         case .hot:
-            return "Water above 75°F in the shallows you are fishing; midday trout slow even if morning air felt cool."
+            return "Above 75°F in the shallows you're fishing; trout slow midday even when morning air felt cool."
         }
     }
-
-    /// Reinforcement on the detail screen after a band is selected.
-    static let waterVersusAirNote = """
-    Remember: outside air temperature is not the same as water temperature. If your weather app says 72°F, the river might still be 56°F—or a shallow flat might be 78°F. This rig is based on the water band you selected above.
-    """
 
     var rigImpact: String {
         switch self {

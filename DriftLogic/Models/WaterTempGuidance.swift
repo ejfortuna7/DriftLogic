@@ -2,33 +2,22 @@ import Foundation
 
 extension WaterTemp {
 
-  /// Shown at the top of the water-temperature picker—answers “is this outside temp?”
-  static let clarificationIntro = """
-  Yes — this means water temperature, not the temperature outside.
-
-  The number on your weather app is air temperature. Fish live in the river, lake, or flat, so this setting uses how warm or cold the water is. Picking the same band as the forecast is a common mistake.
-  """
-
-  /// Help when the angler only knows outside (air) temperature.
+  /// Collapsed help when the angler only knows outside (air) temperature.
   static let estimatingWaterFromAir = """
-  Only know the weather outside? Use these rules of thumb, then choose the closest water band:
-
-  • Tailwater below a dam — water is often much colder than the air; choose one or two bands colder than the forecast.
-  • Spring morning — air can warm before the river does; water is usually colder than it feels outside.
-  • Shaded mountain stream in summer — water is often several degrees colder than the afternoon air.
-  • Wide shallow lake or salt flat in full sun — afternoon water may be close to the air temperature.
-  • Several hot days in a row — ponds and backwaters can warm toward the air temp; trout streams may still run cooler.
-
-  A $10 stream thermometer in the run you plan to fish is the most accurate way to set this.
+  Tailwater or spring morning — often 1–2 bands colder than the forecast.
+  Shaded mountain stream in summer — usually colder than afternoon air.
+  Shallow lake or flat in full sun — afternoon water may match air.
+  Several hot days — ponds warm up; trout streams often stay cooler.
+  Best: stream thermometer in the run you'll fish.
   """
 
   var fahrenheitRange: String {
     switch self {
-    case .frigid: return "Below 42°F (5°C)"
-    case .cold: return "42–50°F (5–10°C)"
-    case .prime: return "50–64°F (10–18°C)"
-    case .warm: return "64–75°F (18–24°C)"
-    case .hot: return "Above 75°F (24°C)"
+    case .frigid: return "<42°F"
+    case .cold: return "42–50°F"
+    case .prime: return "50–64°F"
+    case .warm: return "64–75°F"
+    case .hot: return ">75°F"
     }
   }
 

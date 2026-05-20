@@ -7,7 +7,7 @@ struct FlyPatternGalleryView: View {
         if photos.isEmpty {
             Text("No fly photos matched this rig.")
                 .font(.caption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(DriftLogicTheme.riverMist.opacity(0.7))
         } else {
             VStack(spacing: 16) {
                 ForEach(photos) { photo in
@@ -28,8 +28,9 @@ private struct FlyPatternPhotoCard: View {
                 case .empty:
                     ZStack {
                         RoundedRectangle(cornerRadius: 10, style: .continuous)
-                            .fill(Color(.tertiarySystemGroupedBackground))
+                            .fill(DriftLogicTheme.steelheadNavy.opacity(0.6))
                         ProgressView()
+                            .tint(DriftLogicTheme.riverTeal)
                     }
                     .frame(height: 200)
                 case .success(let image):
@@ -41,7 +42,7 @@ private struct FlyPatternPhotoCard: View {
                         .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                 case .failure:
                     RoundedRectangle(cornerRadius: 10, style: .continuous)
-                        .fill(Color(.tertiarySystemGroupedBackground))
+                        .fill(DriftLogicTheme.steelheadNavy.opacity(0.6))
                         .frame(height: 200)
                         .overlay {
                             VStack(spacing: 6) {
@@ -50,7 +51,7 @@ private struct FlyPatternPhotoCard: View {
                                 Text("Could not load photo")
                                     .font(.caption)
                             }
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(DriftLogicTheme.riverMist.opacity(0.7))
                         }
                 @unknown default:
                     EmptyView()
@@ -59,14 +60,18 @@ private struct FlyPatternPhotoCard: View {
 
             Text(photo.name)
                 .font(.subheadline.weight(.semibold))
+                .foregroundStyle(DriftLogicTheme.riverMist)
 
             Link("View on Wikimedia Commons", destination: photo.sourcePageURL)
                 .font(.caption)
+                .tint(DriftLogicTheme.riverTeal)
 
             Text("\(photo.license) · \(photo.credit)")
                 .font(.caption2)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(DriftLogicTheme.riverMist.opacity(0.65))
         }
+        .padding(12)
+        .background(DriftLogicTheme.cardBackground)
     }
 }
 

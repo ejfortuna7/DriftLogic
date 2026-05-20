@@ -10,16 +10,22 @@
 		136530E5B471C77267ABEC1D /* RigRationale.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25661CC745A26ABB805F12E /* RigRationale.swift */; };
 		1DA544990BE34E637277851A /* WhyThisRigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F1C74E7FA53E93079BFFDE /* WhyThisRigView.swift */; };
 		1E42C0D851C75D52FBC9F9AF /* RigRecommendationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCA6A2A177C98F42A70ECF6B /* RigRecommendationView.swift */; };
+		54068BA3F2B620700CDE24E5 /* DriftLogicTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21163F8CF7F7BC0EF7EBB81C /* DriftLogicTheme.swift */; };
 		569AED35C4C535957AD13606 /* FlyPatternPhotoLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 292F7FB97DADFD1D345EDB49 /* FlyPatternPhotoLibrary.swift */; };
 		9480A34C70EABA6F1170B5D5 /* WaterTempGuidance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6709D184DFDD9EA575E43688 /* WaterTempGuidance.swift */; };
+		9565DFD928AB2059B7ED609B /* DriftLogicAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBCD1F52C5DC32CF54AEBFB8 /* DriftLogicAppearance.swift */; };
+		B70A00F79DEBCF235434076D /* SteelheadArtAW.png in Resources */ = {isa = PBXBuildFile; fileRef = F183B33C64846EF5CE2C6A42 /* SteelheadArtAW.png */; };
 		C41BBDC4CABC33521A6DFE21 /* FlyPatternGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76FA81B2485FC0B6051005A4 /* FlyPatternGalleryView.swift */; };
 		CCB16B74EA8C645635A884A2 /* FlyFishingRigModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CEB57CCD972509C905FAFB /* FlyFishingRigModels.swift */; };
+		CD18991D3E336369F16E7B2D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 12E592CF4B3D4FC60B34354D /* Assets.xcassets */; };
 		E381A98792179A5C6EACB1AE /* ActiveHatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = D71E5202244D6BFE75ED4BE8 /* ActiveHatch.swift */; };
 		F08C912788FAEA2A6EF8DEBD /* DriftLogicApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4947F99074C4226326815949 /* DriftLogicApp.swift */; };
 		F0DFBA3D59437D16E20C03FD /* FishingConditionDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688DA34ECD02B6AAA521BFC0 /* FishingConditionDefinitions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		12E592CF4B3D4FC60B34354D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		21163F8CF7F7BC0EF7EBB81C /* DriftLogicTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriftLogicTheme.swift; sourceTree = "<group>"; };
 		292F7FB97DADFD1D345EDB49 /* FlyPatternPhotoLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyPatternPhotoLibrary.swift; sourceTree = "<group>"; };
 		4947F99074C4226326815949 /* DriftLogicApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriftLogicApp.swift; sourceTree = "<group>"; };
 		51F1C74E7FA53E93079BFFDE /* WhyThisRigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhyThisRigView.swift; sourceTree = "<group>"; };
@@ -29,7 +35,9 @@
 		90A984C3199CE41C6290E15E /* DriftLogic.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = DriftLogic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B25661CC745A26ABB805F12E /* RigRationale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RigRationale.swift; sourceTree = "<group>"; };
 		C9CEB57CCD972509C905FAFB /* FlyFishingRigModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyFishingRigModels.swift; sourceTree = "<group>"; };
+		CBCD1F52C5DC32CF54AEBFB8 /* DriftLogicAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriftLogicAppearance.swift; sourceTree = "<group>"; };
 		D71E5202244D6BFE75ED4BE8 /* ActiveHatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveHatch.swift; sourceTree = "<group>"; };
+		F183B33C64846EF5CE2C6A42 /* SteelheadArtAW.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SteelheadArtAW.png; sourceTree = "<group>"; };
 		FCA6A2A177C98F42A70ECF6B /* RigRecommendationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RigRecommendationView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -45,8 +53,11 @@
 		79EF4E6C7B804599CB806F57 /* DriftLogic */ = {
 			isa = PBXGroup;
 			children = (
+				12E592CF4B3D4FC60B34354D /* Assets.xcassets */,
 				4947F99074C4226326815949 /* DriftLogicApp.swift */,
 				9C2DC15E0AF32FAD9DF05996 /* Models */,
+				AF61FA77EA3E66B288C175A2 /* Resources */,
+				CB138F16C9DF02DA298769B1 /* Theme */,
 				D3D6F0C03120471ADCE8710F /* Views */,
 			);
 			path = DriftLogic;
@@ -73,6 +84,23 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		AF61FA77EA3E66B288C175A2 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				F183B33C64846EF5CE2C6A42 /* SteelheadArtAW.png */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		CB138F16C9DF02DA298769B1 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				CBCD1F52C5DC32CF54AEBFB8 /* DriftLogicAppearance.swift */,
+				21163F8CF7F7BC0EF7EBB81C /* DriftLogicTheme.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
 		D3D6F0C03120471ADCE8710F /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -91,6 +119,7 @@
 			buildConfigurationList = 4F01F2471C9D3D956C423826 /* Build configuration list for PBXNativeTarget "DriftLogic" */;
 			buildPhases = (
 				E274A966389CAAFC531CDB59 /* Sources */,
+				66C6FCD0D04ECDCB3AD3D187 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -131,6 +160,18 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		66C6FCD0D04ECDCB3AD3D187 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CD18991D3E336369F16E7B2D /* Assets.xcassets in Resources */,
+				B70A00F79DEBCF235434076D /* SteelheadArtAW.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		E274A966389CAAFC531CDB59 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -138,6 +179,8 @@
 			files = (
 				E381A98792179A5C6EACB1AE /* ActiveHatch.swift in Sources */,
 				F08C912788FAEA2A6EF8DEBD /* DriftLogicApp.swift in Sources */,
+				9565DFD928AB2059B7ED609B /* DriftLogicAppearance.swift in Sources */,
+				54068BA3F2B620700CDE24E5 /* DriftLogicTheme.swift in Sources */,
 				F0DFBA3D59437D16E20C03FD /* FishingConditionDefinitions.swift in Sources */,
 				CCB16B74EA8C645635A884A2 /* FlyFishingRigModels.swift in Sources */,
 				C41BBDC4CABC33521A6DFE21 /* FlyPatternGalleryView.swift in Sources */,
@@ -274,7 +317,7 @@
 		851125E4F2137E589BDD4B64 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -296,7 +339,7 @@
 		94552776A0801C90B538E4A6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;

@@ -29,40 +29,56 @@ struct RigRecommendationView: View {
         NavigationStack {
             Form {
                 Section {
+                    DriftLogicTitleView(size: 44, showTagline: true)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 8)
+                        .listRowInsets(EdgeInsets(top: 12, leading: 16, bottom: 4, trailing: 16))
+                        .listRowBackground(Color.clear)
+                }
+
+                Section {
                     conditionRow("Water", selection: $waterType, category: .water)
                     conditionRow("Current", selection: $current, category: .current)
                     conditionRow("Depth", selection: $depth, category: .depth)
-                    conditionRow("Water temperature", selection: $temp, category: .waterTemperature, species: species)
+                    conditionRow("Water temp", selection: $temp, category: .waterTemperature, species: species)
                     conditionRow("Clarity", selection: $turbidity, category: .clarity)
                     conditionRow("Target", selection: $species, category: .target)
                     conditionRow("On the water", selection: $hatch, category: .onTheWater, species: species)
                 } header: {
                     Text("Conditions")
+                        .driftLogicSectionHeader()
                 } footer: {
-                    Text("Water temperature is in the river or lake—not the weather forecast. Optional: pick insects you see on the water to refine flies; leave On the water as Not sure if nothing is obvious.")
+                    Text("Water temp is in the river or lake, not the forecast. On the water refines flies—leave Not sure if nothing's obvious.")
+                        .driftLogicSectionFooter()
                 }
 
                 Section {
                     WhyThisRigView(rationale: rig.rationale)
                 } header: {
                     Text("Why This Rig")
+                        .driftLogicSectionHeader()
                 } footer: {
                     Text("Summary for \(species.displayName) only. Gear details are in Your Rig below.")
+                        .driftLogicSectionFooter()
                 }
 
-                Section("Your Rig") {
+                Section {
                     rigRow("Fly Line", rig.flyLine)
                     rigRow("Leader", rig.leader)
                     rigRow("Tippet", rig.tippet)
                     rigRow("Flies", rig.flyType)
+                } header: {
+                    Text("Your Rig")
+                        .driftLogicSectionHeader()
                 }
 
                 Section {
                     Text(rig.proTip)
-                        .font(.body)
-                        .foregroundStyle(.secondary)
+                        .font(.subheadline)
+                        .foregroundStyle(DriftLogicTheme.riverMist.opacity(0.88))
                 } header: {
                     Text("Pro Tip")
+                        .driftLogicSectionHeader()
                 }
 
                 Section {
@@ -71,13 +87,22 @@ struct RigRecommendationView: View {
                         .listRowBackground(Color.clear)
                 } header: {
                     Text("Flies on Your Rig")
+                        .driftLogicSectionHeader()
                 } footer: {
                     Text(
                         "Real fly photos from Wikimedia Commons. Images load from the internet and update when your recommended patterns change. Tap a link for source and license."
                     )
+                    .driftLogicSectionFooter()
                 }
             }
-            .navigationTitle("DriftLogic")
+            .driftLogicFormStyle()
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    DriftLogicTitleView(size: 28, showTagline: false)
+                }
+            }
+            .navigationBarTitleDisplayMode(.inline)
+            .driftLogicNavigationChrome()
         }
     }
 
@@ -92,22 +117,34 @@ struct RigRecommendationView: View {
         } label: {
             HStack {
                 Text(title)
+                    .fontWeight(.medium)
                 Spacer()
-                Text(selection.wrappedValue.displayName)
-                    .foregroundStyle(.secondary)
+                Text(conditionValueLabel(selection.wrappedValue))
+                    .foregroundStyle(DriftLogicTheme.riverTeal.opacity(0.95))
+                    .multilineTextAlignment(.trailing)
             }
         }
+        .driftLogicListRow()
+    }
+
+    private func conditionValueLabel<T: FishingCondition>(_ value: T) -> String {
+        if let temp = value as? WaterTemp {
+            return "\(temp.displayName) · \(temp.shortDescriptor)"
+        }
+        return value.displayName
     }
 
     private func rigRow(_ title: String, _ value: String) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(title)
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(DriftLogicTheme.salmonPink.opacity(0.9))
             Text(value)
                 .font(.body)
+                .foregroundStyle(DriftLogicTheme.riverMist)
         }
         .padding(.vertical, 2)
+        .driftLogicListRow()
     }
 }
 
@@ -118,21 +155,10 @@ private struct ConditionSelectionView<T: FishingCondition>: View {
     let category: ConditionCategory
     var targetSpecies: TargetSpecies?
     @State private var detailOption: T?
+    @State private var showAirTempHints = false
 
     var body: some View {
         List {
-            if category == .waterTemperature {
-                Section {
-                    Text(WaterTemp.clarificationIntro)
-                        .font(.subheadline)
-                    Text(WaterTemp.estimatingWaterFromAir)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                } header: {
-                    Text("Not outside temperature")
-                }
-            }
-
             Section {
                 ForEach(Array(T.allCases), id: \.self) { option in
                     Button {
@@ -140,21 +166,44 @@ private struct ConditionSelectionView<T: FishingCondition>: View {
                         detailOption = option
                     } label: {
                         HStack {
-                            Text(option.displayName)
-                                .foregroundStyle(.primary)
+                            if let temp = option as? WaterTemp {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(temp.displayName)
+                                        .foregroundStyle(DriftLogicTheme.riverMist)
+                                    Text(temp.shortDescriptor)
+                                        .font(.caption)
+                                        .foregroundStyle(DriftLogicTheme.riverTeal.opacity(0.9))
+                                }
+                            } else {
+                                Text(option.displayName)
+                                    .foregroundStyle(DriftLogicTheme.riverMist)
+                            }
                             Spacer()
                             if selection == option {
                                 Image(systemName: "checkmark")
-                                    .foregroundStyle(.tint)
+                                    .foregroundStyle(DriftLogicTheme.salmonPink)
                             }
                         }
                     }
+                    .driftLogicListRow()
                 }
             } footer: {
                 if category == .waterTemperature {
-                    Text("Choose the band that best matches the water where you will fish, not the air temperature on your phone.")
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(category.overview)
+                            .driftLogicSectionFooter()
+                        DisclosureGroup("Only know air temp?", isExpanded: $showAirTempHints) {
+                            Text(WaterTemp.estimatingWaterFromAir)
+                                .font(.subheadline)
+                                .foregroundStyle(DriftLogicTheme.riverMist.opacity(0.75))
+                                .padding(.top, 4)
+                        }
+                        .font(.subheadline)
+                        .tint(DriftLogicTheme.riverTeal)
+                    }
                 } else {
                     Text(category.overview)
+                        .driftLogicSectionFooter()
                 }
             }
 
@@ -162,12 +211,21 @@ private struct ConditionSelectionView<T: FishingCondition>: View {
                 Section {
                     ConditionDetailContent(option: detailOption, targetSpecies: targetSpecies)
                 } header: {
-                    Text(category == .waterTemperature ? "Water: \(detailOption.displayName)" : detailOption.displayName)
+                    Text(waterTempDetailHeader(detailOption))
+                        .driftLogicSectionHeader()
                 }
+                .driftLogicListRow()
             }
         }
-        .navigationTitle(category == .waterTemperature ? "Water temperature" : category.rawValue)
+        .driftLogicFormStyle()
+        .navigationTitle(category == .waterTemperature ? "Water temp" : category.rawValue)
         .navigationBarTitleDisplayMode(.inline)
+        .driftLogicNavigationChrome()
+    }
+
+    private func waterTempDetailHeader(_ option: T) -> String {
+        guard let temp = option as? WaterTemp else { return option.displayName }
+        return "\(temp.displayName) · \(temp.shortDescriptor)"
     }
 }
 
@@ -181,8 +239,7 @@ private struct ConditionDetailContent<T: FishingCondition>: View {
             detailBlock("How to tell", option.howToIdentify)
             detailBlock("Effect on your rig", option.rigImpact)
             if let targetSpecies, let temp = option as? WaterTemp {
-                detailBlock("For your target (\(targetSpecies.displayName))", temp.speciesNotes(for: targetSpecies))
-                detailBlock("Water vs. air temperature", WaterTemp.waterVersusAirNote)
+                detailBlock("For \(targetSpecies.displayName)", temp.speciesNotes(for: targetSpecies))
             }
             if let targetSpecies, let hatch = option as? ActiveHatch, hatch != .notSure {
                 let applies = hatch.influencesRig(species: targetSpecies, turbidity: .clear)
@@ -201,9 +258,10 @@ private struct ConditionDetailContent<T: FishingCondition>: View {
         VStack(alignment: .leading, spacing: 4) {
             Text(label)
                 .font(.caption.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(DriftLogicTheme.salmonPink.opacity(0.9))
             Text(text)
                 .font(.subheadline)
+                .foregroundStyle(DriftLogicTheme.riverMist.opacity(0.88))
         }
     }
 }

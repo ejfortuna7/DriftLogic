@@ -7,21 +7,22 @@ struct WhyThisRigView: View {
         VStack(alignment: .leading, spacing: 14) {
             Text(rationale.headline)
                 .font(.subheadline)
-                .foregroundStyle(.primary)
+                .foregroundStyle(DriftLogicTheme.riverMist.opacity(0.92))
 
             ForEach(rationale.bullets) { bullet in
                 HStack(alignment: .top, spacing: 10) {
                     Text(bullet.title)
                         .font(.caption.weight(.semibold))
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(DriftLogicTheme.salmonPink.opacity(0.95))
                         .frame(width: 76, alignment: .leading)
                     Text(bullet.detail)
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(DriftLogicTheme.riverMist.opacity(0.82))
                         .fixedSize(horizontal: false, vertical: true)
                 }
             }
         }
+        .driftLogicListRow()
         .textCase(nil)
     }
 }
