@@ -7,6 +7,7 @@ struct RigRecommendationView: View {
     @State private var temp: WaterTemp = .prime
     @State private var turbidity: Turbidity = .clear
     @State private var species: TargetSpecies = .trout
+    @State private var hatch: ActiveHatch = .notSure
 
     private var rig: RigRecommendation {
         RigDecisionEngine.generateRig(
@@ -15,12 +16,13 @@ struct RigRecommendationView: View {
             depth: depth,
             temp: temp,
             turbidity: turbidity,
-            species: species
+            species: species,
+            hatch: hatch
         )
     }
 
     private var flyPhotos: [FlyPatternPhoto] {
-        FlyPatternPhotoLibrary.photos(forFlyRecommendation: rig.flyType)
+        FlyPatternPhotoLibrary.photos(forFlyRecommendation: rig.flyType, hatch: hatch)
     }
 
     var body: some View {
@@ -33,10 +35,11 @@ struct RigRecommendationView: View {
                     conditionRow("Water temperature", selection: $temp, category: .waterTemperature, species: species)
                     conditionRow("Clarity", selection: $turbidity, category: .clarity)
                     conditionRow("Target", selection: $species, category: .target)
+                    conditionRow("On the water", selection: $hatch, category: .onTheWater, species: species)
                 } header: {
                     Text("Conditions")
                 } footer: {
-                    Text("Water temperature is measured in the river, lake, or flat—not the air temperature from a weather forecast. Tap Water temperature for help if you only know the weather outside.")
+                    Text("Water temperature is in the river or lake—not the weather forecast. Optional: pick insects you see on the water to refine flies; leave On the water as Not sure if nothing is obvious.")
                 }
 
                 Section {
@@ -180,6 +183,15 @@ private struct ConditionDetailContent<T: FishingCondition>: View {
             if let targetSpecies, let temp = option as? WaterTemp {
                 detailBlock("For your target (\(targetSpecies.displayName))", temp.speciesNotes(for: targetSpecies))
                 detailBlock("Water vs. air temperature", WaterTemp.waterVersusAirNote)
+            }
+            if let targetSpecies, let hatch = option as? ActiveHatch, hatch != .notSure {
+                let applies = hatch.influencesRig(species: targetSpecies, turbidity: .clear)
+                detailBlock(
+                    "For your target (\(targetSpecies.displayName))",
+                    applies
+                        ? hatch.rationaleNote(species: targetSpecies)
+                        : "This hatch refines flies best for trout and steelhead in clearer water, or terrestrials for bass. Muddy water or saltwater targets rely on conditions alone."
+                )
             }
         }
         .textCase(nil)

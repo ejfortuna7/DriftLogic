@@ -14,6 +14,7 @@
 		9480A34C70EABA6F1170B5D5 /* WaterTempGuidance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6709D184DFDD9EA575E43688 /* WaterTempGuidance.swift */; };
 		C41BBDC4CABC33521A6DFE21 /* FlyPatternGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76FA81B2485FC0B6051005A4 /* FlyPatternGalleryView.swift */; };
 		CCB16B74EA8C645635A884A2 /* FlyFishingRigModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CEB57CCD972509C905FAFB /* FlyFishingRigModels.swift */; };
+		E381A98792179A5C6EACB1AE /* ActiveHatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = D71E5202244D6BFE75ED4BE8 /* ActiveHatch.swift */; };
 		F08C912788FAEA2A6EF8DEBD /* DriftLogicApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4947F99074C4226326815949 /* DriftLogicApp.swift */; };
 		F0DFBA3D59437D16E20C03FD /* FishingConditionDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688DA34ECD02B6AAA521BFC0 /* FishingConditionDefinitions.swift */; };
 /* End PBXBuildFile section */
@@ -28,6 +29,7 @@
 		90A984C3199CE41C6290E15E /* DriftLogic.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = DriftLogic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B25661CC745A26ABB805F12E /* RigRationale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RigRationale.swift; sourceTree = "<group>"; };
 		C9CEB57CCD972509C905FAFB /* FlyFishingRigModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyFishingRigModels.swift; sourceTree = "<group>"; };
+		D71E5202244D6BFE75ED4BE8 /* ActiveHatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveHatch.swift; sourceTree = "<group>"; };
 		FCA6A2A177C98F42A70ECF6B /* RigRecommendationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RigRecommendationView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -61,6 +63,7 @@
 		9C2DC15E0AF32FAD9DF05996 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				D71E5202244D6BFE75ED4BE8 /* ActiveHatch.swift */,
 				688DA34ECD02B6AAA521BFC0 /* FishingConditionDefinitions.swift */,
 				C9CEB57CCD972509C905FAFB /* FlyFishingRigModels.swift */,
 				292F7FB97DADFD1D345EDB49 /* FlyPatternPhotoLibrary.swift */,
@@ -133,6 +136,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E381A98792179A5C6EACB1AE /* ActiveHatch.swift in Sources */,
 				F08C912788FAEA2A6EF8DEBD /* DriftLogicApp.swift in Sources */,
 				F0DFBA3D59437D16E20C03FD /* FishingConditionDefinitions.swift in Sources */,
 				CCB16B74EA8C645635A884A2 /* FlyFishingRigModels.swift in Sources */,

@@ -35,7 +35,8 @@ struct WhyThisRigView: View {
                 depth: .shallow,
                 temp: .prime,
                 turbidity: .clear,
-                species: .trout
+                species: .trout,
+                hatch: .blueWingedOlive
             ),
         )
     }

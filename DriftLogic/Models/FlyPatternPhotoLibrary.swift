@@ -187,14 +187,21 @@ enum FlyPatternPhotoLibrary {
 
     // MARK: - Match rig text to photos
 
-    static func photos(forFlyRecommendation recommendation: String) -> [FlyPatternPhoto] {
-        let text = recommendation.lowercased()
+    static func photos(forFlyRecommendation recommendation: String, hatch: ActiveHatch = .notSure) -> [FlyPatternPhoto] {
         var matched: [FlyPatternPhoto] = []
 
         func add(_ photo: FlyPatternPhoto) {
             guard !matched.contains(where: { $0.id == photo.id }) else { return }
             matched.append(photo)
         }
+
+        if hatch.isSelected {
+            for photo in hatch.primaryPhotos() {
+                add(photo)
+            }
+        }
+
+        let text = recommendation.lowercased()
 
         let rules: [(String, FlyPatternPhoto)] = [
             ("parachute adams", parachuteAdams),

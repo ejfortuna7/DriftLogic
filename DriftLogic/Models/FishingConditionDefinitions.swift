@@ -24,6 +24,7 @@ enum ConditionCategory: String {
     case waterTemperature = "Water Temperature"
     case clarity = "Clarity"
     case target = "Target"
+    case onTheWater = "On the Water"
 
     var overview: String {
         switch self {
@@ -39,6 +40,8 @@ enum ConditionCategory: String {
             return "Visibility affects how well fish see your tippet and whether you go subtle or bold."
         case .target:
             return "Species sets baseline tackle strength, typical flies, and presentation style."
+        case .onTheWater:
+            return "Optional: pick what you see hatching or on the surface to refine flies. Leave on Not sure if nothing obvious is active."
         }
     }
 }

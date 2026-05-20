@@ -78,7 +78,8 @@ final class RigDecisionEngine {
         depth: WaterDepth,
         temp: WaterTemp,
         turbidity: Turbidity,
-        species: TargetSpecies
+        species: TargetSpecies,
+        hatch: ActiveHatch = .notSure
     ) -> RigRecommendation {
         let line = selectFlyLine(
             waterType: waterType,
@@ -107,7 +108,8 @@ final class RigDecisionEngine {
             depth: depth,
             temp: temp,
             turbidity: turbidity,
-            species: species
+            species: species,
+            hatch: hatch
         )
         let tip = buildProTip(
             waterType: waterType,
@@ -115,7 +117,8 @@ final class RigDecisionEngine {
             depth: depth,
             temp: temp,
             turbidity: turbidity,
-            species: species
+            species: species,
+            hatch: hatch
         )
         let rationale = RigRationaleBuilder.build(
             waterType: waterType,
@@ -123,7 +126,8 @@ final class RigDecisionEngine {
             depth: depth,
             temp: temp,
             turbidity: turbidity,
-            species: species
+            species: species,
+            hatch: hatch
         )
 
         return RigRecommendation(
@@ -274,8 +278,20 @@ final class RigDecisionEngine {
         depth: WaterDepth,
         temp: WaterTemp,
         turbidity: Turbidity,
-        species: TargetSpecies
+        species: TargetSpecies,
+        hatch: ActiveHatch
     ) -> String {
+        if hatch.influencesRig(species: species, turbidity: turbidity),
+           let hatchFly = hatch.flyRecommendation(
+               species: species,
+               waterType: waterType,
+               depth: depth,
+               temp: temp,
+               current: current
+           ) {
+            return hatchFly
+        }
+
         switch species {
         case .steelhead:
             switch (temp, turbidity) {
@@ -366,8 +382,34 @@ final class RigDecisionEngine {
         depth: WaterDepth,
         temp: WaterTemp,
         turbidity: Turbidity,
-        species: TargetSpecies
+        species: TargetSpecies,
+        hatch: ActiveHatch
     ) -> String {
+        if hatch.isSelected, hatch.influencesRig(species: species, turbidity: turbidity) {
+            let hatchTip: String
+            switch hatch {
+            case .blueWingedOlive:
+                hatchTip = "Match BWO size to naturals on the water—often #18–22. Overcast afternoons are prime."
+            case .caddis:
+                hatchTip = "Fish caddis at dusk; skitter adults in fast water, dead-drift pupa in seams."
+            case .midge:
+                hatchTip = "Midges are small—lengthen leader and watch for subtle takes in the film."
+            case .stonefly:
+                hatchTip = "Work stonefly patterns along bank seams and behind boulders."
+            case .mayfly:
+                hatchTip = "Compare your fly to duns on the water before changing patterns."
+            case .terrestrial:
+                hatchTip = "Plop terrestrials tight to banks; pause briefly before the first twitch."
+            case .chironomid:
+                hatchTip = "Adjust indicator depth until chironomids suspend where fish are feeding."
+            case .notSure:
+                hatchTip = ""
+            }
+            if !hatchTip.isEmpty {
+                return hatchTip
+            }
+        }
+
         if species == .trout, temp == .hot {
             return "Water above ~75°F is poor for trout welfare. If you must fish, use only cool morning hours in spring seeps—otherwise switch target species or location."
         }

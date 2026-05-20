@@ -21,15 +21,19 @@ enum RigRationaleBuilder {
         depth: WaterDepth,
         temp: WaterTemp,
         turbidity: Turbidity,
-        species: TargetSpecies
+        species: TargetSpecies,
+        hatch: ActiveHatch
     ) -> RigRationale {
-        let headline = """
+        var headline = """
         Built for \(species.displayName) in \(waterType.displayName.lowercased()), \
         \(depth.displayName.lowercased()) / \(current.displayName.lowercased()) current, \
         \(temp.fahrenheitRange) water, \(turbidity.displayName.lowercased()) clarity.
         """
+        if hatch.isSelected, hatch.influencesRig(species: species, turbidity: turbidity) {
+            headline += " Active on the water: \(hatch.displayName)."
+        }
 
-        let bullets: [RigRationaleBullet] = [
+        var bullets: [RigRationaleBullet] = [
             RigRationaleBullet(
                 title: "Where",
                 detail: species.habitatNote(waterType: waterType)
@@ -47,6 +51,15 @@ enum RigRationaleBuilder {
                 detail: species.clarityNote(turbidity: turbidity)
             ),
         ]
+
+        if hatch.isSelected {
+            bullets.append(
+                RigRationaleBullet(
+                    title: "On the water",
+                    detail: hatch.rationaleNote(species: species)
+                )
+            )
+        }
 
         return RigRationale(headline: headline, bullets: bullets)
     }
