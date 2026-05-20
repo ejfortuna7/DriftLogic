@@ -21,8 +21,18 @@ struct RigRecommendationView: View {
         )
     }
 
-    private var flyPhotos: [FlyPatternPhoto] {
-        FlyPatternPhotoLibrary.photos(forFlyRecommendation: rig.flyType, hatch: hatch)
+    /// Unique key so fly text and photos refresh when any condition changes.
+    private var conditionsKey: String {
+        [
+            waterType.rawValue,
+            current.rawValue,
+            depth.rawValue,
+            temp.rawValue,
+            turbidity.rawValue,
+            species.rawValue,
+            hatch.rawValue,
+            rig.recommendedFlies.map(\.id).joined(separator: ","),
+        ].joined(separator: "|")
     }
 
     var body: some View {
@@ -54,6 +64,7 @@ struct RigRecommendationView: View {
 
                 Section {
                     WhyThisRigView(rationale: rig.rationale)
+                        .id("rationale-\(conditionsKey)")
                 } header: {
                     Text("Why This Rig")
                         .driftLogicSectionHeader()
@@ -64,9 +75,13 @@ struct RigRecommendationView: View {
 
                 Section {
                     rigRow("Fly Line", rig.flyLine)
+                        .id("line-\(conditionsKey)")
                     rigRow("Leader", rig.leader)
+                        .id("leader-\(conditionsKey)")
                     rigRow("Tippet", rig.tippet)
-                    rigRow("Flies", rig.flyType)
+                        .id("tippet-\(conditionsKey)")
+                    fliesSummaryRow
+                        .id("flies-\(conditionsKey)")
                 } header: {
                     Text("Your Rig")
                         .driftLogicSectionHeader()
@@ -82,15 +97,19 @@ struct RigRecommendationView: View {
                 }
 
                 Section {
-                    FlyPatternGalleryView(photos: flyPhotos)
-                        .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
-                        .listRowBackground(Color.clear)
+                    FlyPatternGalleryView(
+                        flies: rig.recommendedFlies,
+                        refreshKey: conditionsKey
+                    )
+                    .listRowInsets(EdgeInsets(top: 12, leading: 20, bottom: 12, trailing: 20))
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
                 } header: {
                     Text("Flies on Your Rig")
                         .driftLogicSectionHeader()
                 } footer: {
                     Text(
-                        "Real fly photos from Wikimedia Commons. Images load from the internet and update when your recommended patterns change. Tap a link for source and license."
+                        "Top three patterns for your conditions—changes when you adjust water, target, clarity, temp, or hatch. Wikimedia Commons—tap a link for source and license."
                     )
                     .driftLogicSectionFooter()
                 }
@@ -132,6 +151,31 @@ struct RigRecommendationView: View {
             return "\(temp.displayName) · \(temp.shortDescriptor)"
         }
         return value.displayName
+    }
+
+    private var fliesSummaryRow: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Flies")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(DriftLogicTheme.salmonPink.opacity(0.9))
+            ForEach(Array(rig.recommendedFlies.enumerated()), id: \.element.id) { index, fly in
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                    Text("\(index + 1).")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(DriftLogicTheme.salmonPink)
+                        .frame(width: 22, alignment: .leading)
+                    Text(fly.displayLine)
+                        .font(.subheadline)
+                        .foregroundStyle(DriftLogicTheme.riverMist)
+                        .multilineTextAlignment(.leading)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .layoutPriority(1)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.vertical, 4)
+        .driftLogicListRow()
     }
 
     private func rigRow(_ title: String, _ value: String) -> some View {

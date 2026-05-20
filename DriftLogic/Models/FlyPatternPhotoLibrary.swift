@@ -131,10 +131,34 @@ enum FlyPatternPhotoLibrary {
         license: "See Commons file page"
     )
     static let steelheadFly = FlyPatternPhoto(
-        name: "Steelhead / Spey Fly",
+        name: "Durham Ranger (Spey)",
         commonsFilename: "Durham Ranger salmon fly.jpg",
         credit: "MichaelMaggs",
         license: "CC BY-SA 3.0"
+    )
+    static let greenHighlander = FlyPatternPhoto(
+        name: "Green Highlander",
+        commonsFilename: "Green Highlander salmon fly.jpg",
+        credit: "MichaelMaggs",
+        license: "CC BY-SA 3.0"
+    )
+    static let jockScott = FlyPatternPhoto(
+        name: "Jock Scott",
+        commonsFilename: "JockScott-TheSalmonFly.JPG",
+        credit: "Wikimedia Commons contributor",
+        license: "See Commons file page"
+    )
+    static let pinkRoeEgg = FlyPatternPhoto(
+        name: "Nuke Egg / Roe",
+        commonsFilename: "Pink-roe-egg-fly 01.jpg",
+        credit: "Wikimedia Commons contributor",
+        license: "See Commons file page"
+    )
+    static let atlanticSalmonFly = FlyPatternPhoto(
+        name: "Classic Salmon Fly",
+        commonsFilename: "Mosca da salmone.JPG",
+        credit: "Wikimedia Commons contributor",
+        license: "See Commons file page"
     )
     static let largeStreamer = FlyPatternPhoto(
         name: "Large Streamer",

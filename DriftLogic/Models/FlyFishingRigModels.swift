@@ -64,6 +64,7 @@ struct RigRecommendation: Equatable {
     let leader: String
     let tippet: String
     let flyType: String
+    let recommendedFlies: [RecommendedFly]
     let rationale: RigRationale
     let proTip: String
 }
@@ -102,7 +103,7 @@ final class RigDecisionEngine {
             temp: temp,
             species: species
         )
-        let fly = selectFlyType(
+        let flies = FlyRecommendationEngine.recommendedFlies(
             waterType: waterType,
             current: current,
             depth: depth,
@@ -111,6 +112,7 @@ final class RigDecisionEngine {
             species: species,
             hatch: hatch
         )
+        let fly = FlyRecommendationEngine.summary(from: flies)
         let tip = buildProTip(
             waterType: waterType,
             current: current,
@@ -135,6 +137,7 @@ final class RigDecisionEngine {
             leader: leader,
             tippet: tippet,
             flyType: fly,
+            recommendedFlies: flies,
             rationale: rationale,
             proTip: tip
         )
@@ -267,110 +270,6 @@ final class RigDecisionEngine {
             return "3X–4X fluorocarbon"
         default:
             return temp.isWarmOrHot ? "4X–5X nylon" : "4X–5X fluorocarbon"
-        }
-    }
-
-    // MARK: Fly Type
-
-    private static func selectFlyType(
-        waterType: WaterType,
-        current: CurrentSpeed,
-        depth: WaterDepth,
-        temp: WaterTemp,
-        turbidity: Turbidity,
-        species: TargetSpecies,
-        hatch: ActiveHatch
-    ) -> String {
-        if hatch.influencesRig(species: species, turbidity: turbidity),
-           let hatchFly = hatch.flyRecommendation(
-               species: species,
-               waterType: waterType,
-               depth: depth,
-               temp: temp,
-               current: current
-           ) {
-            return hatchFly
-        }
-
-        switch species {
-        case .steelhead:
-            switch (temp, turbidity) {
-            case (.frigid, _), (.cold, _):
-                return "Egg patterns, small stonefly nymphs (#10–14), or micro intruders—dead-drifted slow"
-            case (.prime, _), (.warm, .clear):
-                return "Spey flies, swung intruders, or egg-sucking leeches (#4–8)"
-            case (_, .muddy):
-                return "Large dark intruders or rubber-leg stonefly (#2–6)"
-            case (.hot, _):
-                return "Dark swung streamers and compact intruders in shaded runs (#2–6)"
-            default:
-                return "Soft hackles, egg patterns, or compact Spey patterns (#6–10)"
-            }
-        case .redfish:
-            switch temp {
-            case .frigid, .cold:
-                return turbidity == .clear
-                    ? "Clouser or shrimp (#4–2) on intermediate tip—deeper potholes and channels"
-                    : "Chartreuse/white Clouser (#2–1) with slow strip"
-            case .hot:
-                return turbidity == .clear
-                    ? "Crab or shrimp (#4–2)—prioritize dawn flood tides and grass edges"
-                    : "Chartreuse/white Clouser with loud strip near deeper mangrove shade"
-            default:
-                return turbidity == .clear
-                    ? "Clouser minnow, crab, or shrimp (#4–2)"
-                    : "Chartreuse/white Clouser or spoon fly"
-            }
-        case .bassPanfish:
-            switch (depth, temp) {
-            case (.shallow, .prime), (.shallow, .warm), (.shallow, .hot):
-                return "Poppers, foam ants, or damselfly dries (#6–12)"
-            case (_, .frigid), (_, .cold):
-                return "Slow Woolly Bugger or jig-style streamer (#6–10) along deep banks"
-            case (.deep, _):
-                return "Woolly Bugger, Clouser, or crayfish (#6–2)"
-            default:
-                return "Woolly Bugger or conehead streamer with pause-strip retrieve"
-            }
-        case .trout:
-            break
-        }
-
-        switch (turbidity, depth, current, temp) {
-        case (.clear, .shallow, .slow, .hot), (.clear, .shallow, .still, .hot):
-            return "Large hopper or damselfly dry at first light only (#8–12)—avoid midday trout stress"
-        case (.clear, .shallow, .slow, .warm), (.clear, .shallow, .still, .warm):
-            return "Parachute Adams, elk hair caddis, or terrestrials (#14–18)—fish early and late"
-        case (.clear, .shallow, .slow, .prime), (.clear, .shallow, .still, .prime):
-            return "Parachute Adams, elk hair caddis, or BWO dry (#14–18)"
-        case (.clear, .shallow, .slow, _), (.clear, .shallow, .still, _):
-            return "Blue-winged olive or midge dry (#18–22)"
-        case (.clear, _, .slow, _), (.clear, _, .still, _) where temp.isFrigidOrCold:
-            return "Zebra midge, RS2, or small emerger (#18–22)"
-        case (.muddy, _, _, _), (_, .deep, .fast, _):
-            return "Large rubber-leg stonefly, Woolly Bugger, or articulated streamer (#4–8)"
-        case (.stained, .deep, _, _), (.stained, _, .moderate, _):
-            return "Beadhead prince, Pat's Rubber Legs, or conehead streamer (#8–12)"
-        case (_, .midDepth, _, .prime), (_, .midDepth, _, .warm):
-            return "Pheasant tail, hare's ear, or soft hackle (#14–18)"
-        case (_, .midDepth, _, _) where temp.isFrigidOrCold:
-            return "Beadhead pheasant tail, zebra midge, or egg (#16–22)"
-        default:
-            switch waterType {
-            case .smallStream:
-                return temp.isWarmOrHot
-                    ? "Foam beetle or hopper in shade (#12–14)"
-                    : "High-riding dry or small attractor nymph (#14–16)"
-            case .largeRiver:
-                return current == .fast ? "Heavy stonefly nymph (#6–10)" : "Dry-dropper (caddis + beadhead)"
-            case .lakeStillwater:
-                if temp.isFrigidOrCold {
-                    return "Chironomid under indicator (#18–22) or slow leech on intermediate"
-                }
-                return depth == .shallow ? "Callibaetis or chironomid (#14–16)" : "Leach or damsel nymph (#10–12)"
-            case .coastalFlats:
-                return "Shrimp or crab pattern (#6–4)"
-            }
         }
     }
 

@@ -91,10 +91,10 @@ struct DriftLogicTitleView: View {
                 .foregroundStyle(DriftLogicTheme.riverMist)
                 .shadow(color: .black.opacity(0.5), radius: 2, x: 0, y: 2)
             if showTagline {
-                Text("read the water · rig the drift")
+                Text("A fly fisherman's rigging guide")
                     .font(.caption.weight(.medium))
-                    .tracking(0.6)
-                    .textCase(.uppercase)
+                    .tracking(0.4)
+                    .multilineTextAlignment(.center)
                     .foregroundStyle(DriftLogicTheme.riverTeal)
             }
         }
@@ -117,7 +117,7 @@ extension View {
 
     func driftLogicListRow() -> some View {
         listRowBackground(DriftLogicTheme.cardBackground)
-            .listRowInsets(EdgeInsets(top: 6, leading: 12, bottom: 6, trailing: 12))
+            .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
             .foregroundStyle(DriftLogicTheme.riverMist)
     }
 

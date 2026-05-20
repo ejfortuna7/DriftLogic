@@ -85,6 +85,133 @@ extension ActiveHatch {
         }
     }
 
+    /// Structured picks when hatch overrides conditions—photos always match these three.
+    func recommendedFlies(
+        species: TargetSpecies,
+        waterType: WaterType,
+        depth: WaterDepth,
+        temp: WaterTemp,
+        current: CurrentSpeed
+    ) -> [RecommendedFly]? {
+        guard isSelected else { return nil }
+        let p = FlyPatternPhotoLibrary.self
+        func fly(_ photo: FlyPatternPhoto, size: String, tactic: String) -> RecommendedFly {
+            RecommendedFly(name: photo.name, sizeNote: size, tactic: tactic, photo: photo)
+        }
+
+        switch (species, self) {
+        case (.trout, .blueWingedOlive):
+            if depth == .shallow && (current == .slow || current == .still) {
+                return [
+                    fly(p.bwoSparkleDun, size: "#18–22", tactic: "Match rising fish"),
+                    fly(p.midgeEmerger, size: "#20–22", tactic: "RS2 in the film"),
+                    fly(p.parachuteAdams, size: "#18–20", tactic: "Parachute BWO"),
+                ]
+            }
+            return [
+                fly(p.bwoSparkleDun, size: "#18–20", tactic: "Beadhead through seams"),
+                fly(p.softHackle, size: "#16–18", tactic: "Olive soft hackle swing"),
+                fly(p.pheasantTail, size: "#18–20", tactic: "BWO nymph profile"),
+            ]
+        case (.trout, .caddis):
+            if depth == .shallow {
+                return [
+                    fly(p.elkHairCaddis, size: "#14–18", tactic: "Skitter or dead-drift at dusk"),
+                    fly(p.hairWingedCaddis, size: "#14–16", tactic: "X-Caddis in film"),
+                    fly(p.stimulator, size: "#12–14", tactic: "High-riding caddis"),
+                ]
+            }
+            return [
+                fly(p.hairWingedCaddis, size: "#14–16", tactic: "Pupa under indicator"),
+                fly(p.softHackle, size: "#14–16", tactic: "Soft-hackle caddis"),
+                fly(p.elkHairCaddis, size: "#14–16", tactic: "Adult at evening"),
+            ]
+        case (.trout, .midge):
+            return [
+                fly(p.biotMidge, size: "#20–24", tactic: "Zebra midge in film"),
+                fly(p.midgeEmerger, size: "#20–22", tactic: "Black beauty / RS2"),
+                fly(p.bwoSparkleDun, size: "#22–24", tactic: "Tiny olive emerger"),
+            ]
+        case (.trout, .stonefly):
+            if current == .fast {
+                return [
+                    fly(p.rubberLegsStone, size: "#6–10", tactic: "Tight to banks in heavy water"),
+                    fly(p.stoneflyNymph, size: "#8–10", tactic: "Pat's Rubber Legs"),
+                    fly(p.woollyBugger, size: "#8–10", tactic: "Backup streamer"),
+                ]
+            }
+            return [
+                fly(p.stimulator, size: "#8–12", tactic: "Golden stone dry"),
+                fly(p.stoneflyNymph, size: "#8–14", tactic: "Beadhead stonefly"),
+                fly(p.rubberLegsStone, size: "#8–12", tactic: "Rubber-leg nymph"),
+            ]
+        case (.trout, .mayfly):
+            if depth == .shallow {
+                return [
+                    fly(p.parachuteAdams, size: "#12–16", tactic: "Match duns on the water"),
+                    fly(p.stimulator, size: "#12–14", tactic: "Light Cahill-style"),
+                    fly(p.midgeEmerger, size: "#14–16", tactic: "Parachute emerger"),
+                ]
+            }
+            return [
+                fly(p.pheasantTail, size: "#14–18", tactic: "Pheasant tail nymph"),
+                fly(p.haresEar, size: "#14–16", tactic: "Hare's ear"),
+                fly(p.midgeEmerger, size: "#14–16", tactic: "Emerger"),
+            ]
+        case (.trout, .terrestrial):
+            return [
+                fly(p.foamHopper, size: "#10–16", tactic: "Undercut banks"),
+                fly(p.foamAnt, size: "#14–16", tactic: "Grass and brush lines"),
+                fly(p.stimulator, size: "#12–14", tactic: "Beetle profile"),
+            ]
+        case (.trout, .chironomid):
+            if waterType == .lakeStillwater {
+                return [
+                    fly(p.chironomid, size: "#16–22", tactic: "Indicator over weed line"),
+                    fly(p.biotMidge, size: "#18–20", tactic: "Pupa cluster"),
+                    fly(p.eggSuckingLeech, size: "#10–12", tactic: "Slow leech backup"),
+                ]
+            }
+            return [
+                fly(p.chironomid, size: "#18–22", tactic: "Calm eddies"),
+                fly(p.biotMidge, size: "#20–22", tactic: "Midge pupa"),
+                fly(p.midgeEmerger, size: "#20–22", tactic: "Emerger in film"),
+            ]
+        case (.steelhead, .stonefly):
+            return [
+                fly(p.stoneflyNymph, size: "#8–12", tactic: "Dead-drift through runs"),
+                fly(p.rubberLegsStone, size: "#8–12", tactic: "Dark rubber-leg"),
+                fly(p.softHackle, size: "#12–14", tactic: "Sparse soft hackle"),
+            ]
+        case (.steelhead, .midge), (.steelhead, .blueWingedOlive):
+            return [
+                fly(p.pinkRoeEgg, size: "#14–16", tactic: "Small egg in soft water"),
+                fly(p.softHackle, size: "#14–18", tactic: "Tiny soft hackle"),
+                fly(p.biotMidge, size: "#16–18", tactic: "Small nymph"),
+            ]
+        case (.steelhead, .caddis):
+            return [
+                fly(p.softHackle, size: "#12–14", tactic: "Swung soft hackle"),
+                fly(p.hairWingedCaddis, size: "#12–14", tactic: "Caddis pupa swing"),
+                fly(p.greenHighlander, size: "#6–8", tactic: "Classic swing at dusk"),
+            ]
+        case (.bassPanfish, .terrestrial):
+            return [
+                fly(p.foamHopper, size: "#4–8", tactic: "Weed edges and docks"),
+                fly(p.foamAnt, size: "#8–12", tactic: "Lily pads"),
+                fly(p.bluegillStreamer, size: "#6–8", tactic: "Frog or diver backup"),
+            ]
+        case (.bassPanfish, .caddis):
+            return [
+                fly(p.softHackle, size: "#10–12", tactic: "Damselfly nymph"),
+                fly(p.hairWingedCaddis, size: "#10–12", tactic: "Caddis pupa strip"),
+                fly(p.woollyBugger, size: "#8–10", tactic: "Slow near pads"),
+            ]
+        default:
+            return nil
+        }
+    }
+
     func primaryPhotos() -> [FlyPatternPhoto] {
         switch self {
         case .notSure: return []
