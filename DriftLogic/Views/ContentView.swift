@@ -36,6 +36,18 @@ final class AppModel: ObservableObject {
 
     var isComplete: Bool { filledCount == Self.requiredCount }
 
+    /// Names of the conditions still unanswered — drives "what's missing" UI.
+    var missingLabels: [String] {
+        var out: [String] = []
+        if method == nil { out.append("Gear") }
+        if species == nil { out.append("Species") }
+        if current == nil { out.append("Current") }
+        if depth == nil { out.append("Depth") }
+        if temp == nil { out.append("Water Temp") }
+        if clarity == nil { out.append("Clarity") }
+        return out
+    }
+
     var scenario: Scenario? {
         guard
             let method, let species, let current,
@@ -179,9 +191,11 @@ struct ContentView: View {
     // MARK: Progress
 
     private var remainingLabel: String {
-        let remaining = AppModel.requiredCount - model.filledCount
-        if remaining == 0 { return "Your rig is ready" }
-        return "\(remaining) answer\(remaining == 1 ? "" : "s") to go"
+        let missing = model.missingLabels
+        if missing.isEmpty { return "Your rig is ready" }
+        if missing.count == AppModel.requiredCount { return "\(missing.count) answers to go" }
+        // Name what's missing so nobody is left hunting for the last chip.
+        return "Still need: \(missing.joined(separator: " · "))"
     }
 
     private var progressCard: some View {
@@ -365,7 +379,11 @@ struct ContentView: View {
             Image(systemName: "fish.fill")
                 .font(.title)
                 .foregroundStyle(DriftLogicTheme.teal.opacity(0.7))
-            Text("Answer the questions above and DriftLogic builds a complete Rocky River rig — gear, line, five picks, and a pro tip.")
+            Text(
+                model.filledCount == 0
+                    ? "Answer the questions above and DriftLogic builds a complete Rocky River rig — gear, line, five picks, and a pro tip."
+                    : "Almost there — still need: \(model.missingLabels.joined(separator: " · ")). Your rig appears here the moment the last one is set."
+            )
                 .font(.footnote)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(DriftLogicTheme.mist.opacity(0.65))
