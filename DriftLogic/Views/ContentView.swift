@@ -105,6 +105,10 @@ struct ContentView: View {
                     }
                     .padding(.horizontal, 16)
                     .padding(.bottom, 40)
+                    // Pin the column to the scroll container's width. Without this,
+                    // the content can be measured with a nil width proposal and lay
+                    // out at its ideal (overflowing) width — seen on iOS 26 sim.
+                    .containerRelativeFrame(.horizontal)
                 }
                 .scrollIndicators(.hidden)
                 .onChange(of: model.isComplete) { _, complete in
@@ -128,11 +132,16 @@ struct ContentView: View {
 
     private var header: some View {
         ZStack(alignment: .bottomLeading) {
-            Image("SteelheadArtAW")
-                .resizable()
-                .scaledToFill()
+            // The art is painted as an overlay on a fixed-size base so the
+            // image's intrinsic (very wide) size can never inflate the layout.
+            Color.clear
                 .frame(height: 190)
                 .frame(maxWidth: .infinity)
+                .overlay {
+                    Image("SteelheadArtAW")
+                        .resizable()
+                        .scaledToFill()
+                }
                 .clipped()
                 .overlay {
                     LinearGradient(
@@ -362,9 +371,9 @@ struct ContentView: View {
                 .foregroundStyle(DriftLogicTheme.mist.opacity(0.65))
                 .fixedSize(horizontal: false, vertical: true)
         }
-        .frame(maxWidth: .infinity)
         .padding(.vertical, 28)
         .padding(.horizontal, 20)
+        .frame(maxWidth: .infinity)
         .background {
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .strokeBorder(

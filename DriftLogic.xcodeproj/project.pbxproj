@@ -6,326 +6,269 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		136530E5B471C77267ABEC1D /* RigRationale.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25661CC745A26ABB805F12E /* RigRationale.swift */; };
-		1DA544990BE34E637277851A /* WhyThisRigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F1C74E7FA53E93079BFFDE /* WhyThisRigView.swift */; };
-		1E42C0D851C75D52FBC9F9AF /* RigRecommendationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCA6A2A177C98F42A70ECF6B /* RigRecommendationView.swift */; };
-		54068BA3F2B620700CDE24E5 /* DriftLogicTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21163F8CF7F7BC0EF7EBB81C /* DriftLogicTheme.swift */; };
-		569AED35C4C535957AD13606 /* FlyPatternPhotoLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 292F7FB97DADFD1D345EDB49 /* FlyPatternPhotoLibrary.swift */; };
-		9480A34C70EABA6F1170B5D5 /* WaterTempGuidance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6709D184DFDD9EA575E43688 /* WaterTempGuidance.swift */; };
-		9565DFD928AB2059B7ED609B /* DriftLogicAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBCD1F52C5DC32CF54AEBFB8 /* DriftLogicAppearance.swift */; };
-		9A571AB7FFCB3D6BA3E6E6F8 /* FlyRecommendationEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40EAC0C189CAAC1316959E3 /* FlyRecommendationEngine.swift */; };
-		B70A00F79DEBCF235434076D /* SteelheadArtAW.png in Resources */ = {isa = PBXBuildFile; fileRef = F183B33C64846EF5CE2C6A42 /* SteelheadArtAW.png */; };
-		C41BBDC4CABC33521A6DFE21 /* FlyPatternGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76FA81B2485FC0B6051005A4 /* FlyPatternGalleryView.swift */; };
-		CCB16B74EA8C645635A884A2 /* FlyFishingRigModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CEB57CCD972509C905FAFB /* FlyFishingRigModels.swift */; };
-		CD18991D3E336369F16E7B2D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 12E592CF4B3D4FC60B34354D /* Assets.xcassets */; };
-		E381A98792179A5C6EACB1AE /* ActiveHatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = D71E5202244D6BFE75ED4BE8 /* ActiveHatch.swift */; };
-		F08C912788FAEA2A6EF8DEBD /* DriftLogicApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4947F99074C4226326815949 /* DriftLogicApp.swift */; };
-		F0DFBA3D59437D16E20C03FD /* FishingConditionDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688DA34ECD02B6AAA521BFC0 /* FishingConditionDefinitions.swift */; };
-/* End PBXBuildFile section */
+/* Begin PBXContainerItemProxy section */
+		A000000000000000000000D1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A0000000000000000000000A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A000000000000000000000T1;
+			remoteInfo = DriftLogic;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		12E592CF4B3D4FC60B34354D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		21163F8CF7F7BC0EF7EBB81C /* DriftLogicTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriftLogicTheme.swift; sourceTree = "<group>"; };
-		292F7FB97DADFD1D345EDB49 /* FlyPatternPhotoLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyPatternPhotoLibrary.swift; sourceTree = "<group>"; };
-		4947F99074C4226326815949 /* DriftLogicApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriftLogicApp.swift; sourceTree = "<group>"; };
-		51F1C74E7FA53E93079BFFDE /* WhyThisRigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhyThisRigView.swift; sourceTree = "<group>"; };
-		6709D184DFDD9EA575E43688 /* WaterTempGuidance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterTempGuidance.swift; sourceTree = "<group>"; };
-		688DA34ECD02B6AAA521BFC0 /* FishingConditionDefinitions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FishingConditionDefinitions.swift; sourceTree = "<group>"; };
-		76FA81B2485FC0B6051005A4 /* FlyPatternGalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyPatternGalleryView.swift; sourceTree = "<group>"; };
-		90A984C3199CE41C6290E15E /* DriftLogic.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = DriftLogic.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A40EAC0C189CAAC1316959E3 /* FlyRecommendationEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyRecommendationEngine.swift; sourceTree = "<group>"; };
-		B25661CC745A26ABB805F12E /* RigRationale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RigRationale.swift; sourceTree = "<group>"; };
-		C9CEB57CCD972509C905FAFB /* FlyFishingRigModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyFishingRigModels.swift; sourceTree = "<group>"; };
-		CBCD1F52C5DC32CF54AEBFB8 /* DriftLogicAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriftLogicAppearance.swift; sourceTree = "<group>"; };
-		D71E5202244D6BFE75ED4BE8 /* ActiveHatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveHatch.swift; sourceTree = "<group>"; };
-		F183B33C64846EF5CE2C6A42 /* SteelheadArtAW.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SteelheadArtAW.png; sourceTree = "<group>"; };
-		FCA6A2A177C98F42A70ECF6B /* RigRecommendationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RigRecommendationView.swift; sourceTree = "<group>"; };
+		A000000000000000000000A1 /* DriftLogic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DriftLogic.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A000000000000000000000A2 /* DriftLogicTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DriftLogicTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXGroup section */
-		0EACE7847AB13653FFD7BAFE = {
-			isa = PBXGroup;
-			children = (
-				79EF4E6C7B804599CB806F57 /* DriftLogic */,
-				9BBA7639B9A97D36B2728357 /* Products */,
-			);
-			sourceTree = "<group>";
-		};
-		79EF4E6C7B804599CB806F57 /* DriftLogic */ = {
-			isa = PBXGroup;
-			children = (
-				12E592CF4B3D4FC60B34354D /* Assets.xcassets */,
-				4947F99074C4226326815949 /* DriftLogicApp.swift */,
-				9C2DC15E0AF32FAD9DF05996 /* Models */,
-				AF61FA77EA3E66B288C175A2 /* Resources */,
-				CB138F16C9DF02DA298769B1 /* Theme */,
-				D3D6F0C03120471ADCE8710F /* Views */,
-			);
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		A000000000000000000000E1 /* DriftLogic */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
 			path = DriftLogic;
 			sourceTree = "<group>";
 		};
-		9BBA7639B9A97D36B2728357 /* Products */ = {
+		A000000000000000000000E2 /* DriftLogicTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = DriftLogicTests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A000000000000000000000F1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A000000000000000000000F2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A0000000000000000000001A = {
 			isa = PBXGroup;
 			children = (
-				90A984C3199CE41C6290E15E /* DriftLogic.app */,
+				A000000000000000000000E1 /* DriftLogic */,
+				A000000000000000000000E2 /* DriftLogicTests */,
+				A0000000000000000000002A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A0000000000000000000002A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A000000000000000000000A1 /* DriftLogic.app */,
+				A000000000000000000000A2 /* DriftLogicTests.xctest */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		9C2DC15E0AF32FAD9DF05996 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				D71E5202244D6BFE75ED4BE8 /* ActiveHatch.swift */,
-				688DA34ECD02B6AAA521BFC0 /* FishingConditionDefinitions.swift */,
-				C9CEB57CCD972509C905FAFB /* FlyFishingRigModels.swift */,
-				292F7FB97DADFD1D345EDB49 /* FlyPatternPhotoLibrary.swift */,
-				A40EAC0C189CAAC1316959E3 /* FlyRecommendationEngine.swift */,
-				B25661CC745A26ABB805F12E /* RigRationale.swift */,
-				6709D184DFDD9EA575E43688 /* WaterTempGuidance.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
-		AF61FA77EA3E66B288C175A2 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				F183B33C64846EF5CE2C6A42 /* SteelheadArtAW.png */,
-			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
-		CB138F16C9DF02DA298769B1 /* Theme */ = {
-			isa = PBXGroup;
-			children = (
-				CBCD1F52C5DC32CF54AEBFB8 /* DriftLogicAppearance.swift */,
-				21163F8CF7F7BC0EF7EBB81C /* DriftLogicTheme.swift */,
-			);
-			path = Theme;
-			sourceTree = "<group>";
-		};
-		D3D6F0C03120471ADCE8710F /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				76FA81B2485FC0B6051005A4 /* FlyPatternGalleryView.swift */,
-				FCA6A2A177C98F42A70ECF6B /* RigRecommendationView.swift */,
-				51F1C74E7FA53E93079BFFDE /* WhyThisRigView.swift */,
-			);
-			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		A5BA3E302790254490A90B1A /* DriftLogic */ = {
+		A000000000000000000000T1 /* DriftLogic */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4F01F2471C9D3D956C423826 /* Build configuration list for PBXNativeTarget "DriftLogic" */;
+			buildConfigurationList = A000000000000000000000C1 /* Build configuration list for PBXNativeTarget "DriftLogic" */;
 			buildPhases = (
-				E274A966389CAAFC531CDB59 /* Sources */,
-				66C6FCD0D04ECDCB3AD3D187 /* Resources */,
+				A000000000000000000000S1 /* Sources */,
+				A000000000000000000000F1 /* Frameworks */,
+				A000000000000000000000R1 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = DriftLogic;
-			packageProductDependencies = (
+			fileSystemSynchronizedGroups = (
+				A000000000000000000000E1 /* DriftLogic */,
 			);
+			name = DriftLogic;
 			productName = DriftLogic;
-			productReference = 90A984C3199CE41C6290E15E /* DriftLogic.app */;
+			productReference = A000000000000000000000A1 /* DriftLogic.app */;
 			productType = "com.apple.product-type.application";
+		};
+		A000000000000000000000T2 /* DriftLogicTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A000000000000000000000C2 /* Build configuration list for PBXNativeTarget "DriftLogicTests" */;
+			buildPhases = (
+				A000000000000000000000S2 /* Sources */,
+				A000000000000000000000F2 /* Frameworks */,
+				A000000000000000000000R2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A000000000000000000000D2 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				A000000000000000000000E2 /* DriftLogicTests */,
+			);
+			name = DriftLogicTests;
+			productName = DriftLogicTests;
+			productReference = A000000000000000000000A2 /* DriftLogicTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		8F0A2BA987D1A29030D69228 /* Project object */ = {
+		A0000000000000000000000A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				BuildIndependentTargetsInParallel = YES;
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
 				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					A000000000000000000000T1 = {
+						CreatedOnToolsVersion = 16.0;
+					};
+					A000000000000000000000T2 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = A000000000000000000000T1;
+					};
+				};
 			};
-			buildConfigurationList = 5A6E1A542E463F0885A5A839 /* Build configuration list for PBXProject "DriftLogic" */;
-			compatibilityVersion = "Xcode 14.0";
+			buildConfigurationList = A000000000000000000000C0 /* Build configuration list for PBXProject "DriftLogic" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				Base,
 				en,
+				Base,
 			);
-			mainGroup = 0EACE7847AB13653FFD7BAFE;
+			mainGroup = A0000000000000000000001A;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
+			productRefGroup = A0000000000000000000002A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A5BA3E302790254490A90B1A /* DriftLogic */,
+				A000000000000000000000T1 /* DriftLogic */,
+				A000000000000000000000T2 /* DriftLogicTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		66C6FCD0D04ECDCB3AD3D187 /* Resources */ = {
+		A000000000000000000000R1 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD18991D3E336369F16E7B2D /* Assets.xcassets in Resources */,
-				B70A00F79DEBCF235434076D /* SteelheadArtAW.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A000000000000000000000R2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		E274A966389CAAFC531CDB59 /* Sources */ = {
+		A000000000000000000000S1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E381A98792179A5C6EACB1AE /* ActiveHatch.swift in Sources */,
-				F08C912788FAEA2A6EF8DEBD /* DriftLogicApp.swift in Sources */,
-				9565DFD928AB2059B7ED609B /* DriftLogicAppearance.swift in Sources */,
-				54068BA3F2B620700CDE24E5 /* DriftLogicTheme.swift in Sources */,
-				F0DFBA3D59437D16E20C03FD /* FishingConditionDefinitions.swift in Sources */,
-				CCB16B74EA8C645635A884A2 /* FlyFishingRigModels.swift in Sources */,
-				C41BBDC4CABC33521A6DFE21 /* FlyPatternGalleryView.swift in Sources */,
-				569AED35C4C535957AD13606 /* FlyPatternPhotoLibrary.swift in Sources */,
-				9A571AB7FFCB3D6BA3E6E6F8 /* FlyRecommendationEngine.swift in Sources */,
-				136530E5B471C77267ABEC1D /* RigRationale.swift in Sources */,
-				1E42C0D851C75D52FBC9F9AF /* RigRecommendationView.swift in Sources */,
-				9480A34C70EABA6F1170B5D5 /* WaterTempGuidance.swift in Sources */,
-				1DA544990BE34E637277851A /* WhyThisRigView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A000000000000000000000S2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin XCBuildConfiguration section */
-		1B3D60D9E86E1C84A5277176 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 5.0;
-			};
-			name = Release;
+/* Begin PBXTargetDependency section */
+		A000000000000000000000D2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A000000000000000000000T1 /* DriftLogic */;
+			targetProxy = A000000000000000000000D1 /* PBXContainerItemProxy */;
 		};
-		216CC6D5D1B15444961AA836 /* Debug */ = {
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		A000000000000000000000B1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"$(inherited)",
 					"DEBUG=1",
+					"$(inherited)",
 				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		851125E4F2137E589BDD4B64 /* Debug */ = {
+		A000000000000000000000B2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A000000000000000000000B3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = DriftLogic;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -334,20 +277,23 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.driftlogic.app;
-				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 			};
 			name = Debug;
 		};
-		94552776A0801C90B538E4A6 /* Release */ = {
+		A000000000000000000000B4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = DriftLogic;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -356,34 +302,72 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.driftlogic.app;
-				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Release;
+		};
+		A000000000000000000000B5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.driftlogic.app.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DriftLogic.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/DriftLogic";
+			};
+			name = Debug;
+		};
+		A000000000000000000000B6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.driftlogic.app.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DriftLogic.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/DriftLogic";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		4F01F2471C9D3D956C423826 /* Build configuration list for PBXNativeTarget "DriftLogic" */ = {
+		A000000000000000000000C0 /* Build configuration list for PBXProject "DriftLogic" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				851125E4F2137E589BDD4B64 /* Debug */,
-				94552776A0801C90B538E4A6 /* Release */,
+				A000000000000000000000B1 /* Debug */,
+				A000000000000000000000B2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
 		};
-		5A6E1A542E463F0885A5A839 /* Build configuration list for PBXProject "DriftLogic" */ = {
+		A000000000000000000000C1 /* Build configuration list for PBXNativeTarget "DriftLogic" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				216CC6D5D1B15444961AA836 /* Debug */,
-				1B3D60D9E86E1C84A5277176 /* Release */,
+				A000000000000000000000B3 /* Debug */,
+				A000000000000000000000B4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
+		};
+		A000000000000000000000C2 /* Build configuration list for PBXNativeTarget "DriftLogicTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A000000000000000000000B5 /* Debug */,
+				A000000000000000000000B6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 8F0A2BA987D1A29030D69228 /* Project object */;
+	rootObject = A0000000000000000000000A /* Project object */;
 }
