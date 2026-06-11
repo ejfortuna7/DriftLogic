@@ -8,8 +8,9 @@ struct DriftLogicApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RigRecommendationView()
-                .tint(DriftLogicTheme.accent)
+            ContentView()
+                .tint(DriftLogicTheme.tealLight)
+                .preferredColorScheme(.dark)
         }
     }
 }
