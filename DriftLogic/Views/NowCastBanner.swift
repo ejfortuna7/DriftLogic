@@ -1,8 +1,10 @@
 import SwiftUI
 
-/// Live-gauge banner shown above the condition pickers. Mirrors the web
-/// tool's "Right now on the Rocky" card: live cfs / °F readout plus a
-/// one-tap "Apply to conditions" that fills current, clarity, and temp.
+/// Live-gauge banner for the selected river. Three honest states:
+/// - Direct gauge: live readout (cfs · stage · °F · clarity) + apply button.
+/// - Indicator gauge (Elk via Brandy Run): clarity read only, clearly labeled —
+///   the indicator's cfs is never presented as the river's own flow.
+/// - No gauge (Walnut, Ashtabula): says so, and points to manual conditions.
 struct NowCastBanner: View {
     @ObservedObject var service: NowCastService
     var onApply: (CurrentSpeed?, WaterClarity?, WaterTemp?) -> Void
@@ -16,8 +18,12 @@ struct NowCastBanner: View {
             loadingRow
         case .loaded:
             loadedCard
+        case .unavailable:
+            unavailableCard
         }
     }
+
+    private var river: River { service.river }
 
     // MARK: Loading
 
@@ -26,12 +32,34 @@ struct NowCastBanner: View {
             ProgressView()
                 .controlSize(.small)
                 .tint(DriftLogicTheme.tealLight)
-            Text("Checking the Rocky River gauge…")
+            Text("Checking the \(river.shortName) gauge…")
                 .font(.footnote)
                 .foregroundStyle(DriftLogicTheme.mist.opacity(0.7))
         }
         .driftLogicCard()
         .transition(.opacity)
+    }
+
+    // MARK: No gauge
+
+    private var unavailableCard: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Label {
+                Text("No live gauge on \(river.name)")
+                    .font(.subheadline.weight(.bold))
+                    .foregroundStyle(DriftLogicTheme.mist)
+            } icon: {
+                Image(systemName: "antenna.radiowaves.left.and.right.slash")
+                    .imageScale(.small)
+                    .foregroundStyle(DriftLogicTheme.salmon)
+            }
+            Text("USGS doesn't monitor this creek. Eyeball the water and set conditions below — DriftLogic does the rest.")
+                .font(.footnote)
+                .foregroundStyle(DriftLogicTheme.mist.opacity(0.75))
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .driftLogicCard(accent: DriftLogicTheme.salmon)
+        .transition(.opacity.combined(with: .move(edge: .top)))
     }
 
     // MARK: Loaded
@@ -40,7 +68,7 @@ struct NowCastBanner: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .firstTextBaseline) {
                 Label {
-                    Text("Right now on the Rocky")
+                    Text("Right now on the \(river.shortName)")
                         .font(.subheadline.weight(.bold))
                         .foregroundStyle(DriftLogicTheme.mist)
                 } icon: {
@@ -50,7 +78,7 @@ struct NowCastBanner: View {
                         .shadow(color: .green.opacity(0.8), radius: 4)
                 }
                 Spacer()
-                Text("LIVE · USGS Berea")
+                Text("LIVE · \(river.gaugeName ?? "USGS")")
                     .font(.caption2.weight(.semibold))
                     .tracking(0.5)
                     .foregroundStyle(DriftLogicTheme.tealLight.opacity(0.8))
@@ -59,6 +87,7 @@ struct NowCastBanner: View {
             Text(readout)
                 .font(.title3.weight(.bold))
                 .foregroundStyle(DriftLogicTheme.tealLight)
+                .fixedSize(horizontal: false, vertical: true)
 
             Text(statusLine)
                 .font(.footnote)
@@ -91,34 +120,49 @@ struct NowCastBanner: View {
         .transition(.opacity.combined(with: .move(edge: .top)))
     }
 
-    /// "Rocky River now: 180 cfs · 52°F · Stained"
+    /// Direct: "Rocky now: 228 cfs · 5.9 ft · 81°F · Clear"
+    /// Indicator: "Brandy Run indicator: 4 cfs — Elk likely clear"
     private var readout: String {
+        if river.isIndicatorGauge {
+            var s = "Brandy Run indicator"
+            if let cfs = service.cfs { s += ": \(formatted(cfs)) cfs" }
+            if let clarity = service.suggestedClarity {
+                s += " — \(river.shortName) likely \(clarity.displayName.lowercased())"
+            }
+            return s
+        }
+
         var parts: [String] = []
-        if let cfs = service.cfs {
-            parts.append("\(Int(cfs.rounded())) cfs")
-        }
-        if let tempF = service.tempF {
-            parts.append("\(tempF)°F")
-        }
-        if let clarity = service.suggestedClarity {
-            parts.append(clarity.displayName)
-        }
-        return "Rocky River now: " + parts.joined(separator: " · ")
+        if let cfs = service.cfs { parts.append("\(formatted(cfs)) cfs") }
+        if let stage = service.stageFt { parts.append(String(format: "%.1f ft", stage)) }
+        if let tempF = service.tempF { parts.append("\(tempF)°F") }
+        if let turbidity = service.turbidityFNU { parts.append("\(formatted(turbidity)) FNU") }
+        if let clarity = service.suggestedClarity { parts.append(clarity.displayName) }
+        return "\(river.shortName) now: " + parts.joined(separator: " · ")
+    }
+
+    private func formatted(_ v: Double) -> String {
+        v >= 100 ? String(Int(v.rounded())) : String(format: "%.1f", v)
     }
 
     private var statusLine: String {
+        var line: String
         if service.steelheadOn {
             switch service.suggestedTemp {
             case .frigid, .cold:
-                return "Steelhead are on. Cold water — dead-drift eggs and beads, slow and deep."
+                line = "Steelhead are on. Cold water — dead-drift eggs and beads, slow and deep."
             case .prime:
-                return "Steelhead are on. Prime water — they'll chase a swung fly or lure."
+                line = "Steelhead are on. Prime water — they'll chase a swung fly or lure."
             default:
-                return "Steelhead are on. They're in the river right now."
+                line = "Steelhead are on. They're in the river right now."
             }
         } else {
-            return "Steelhead have left for the summer — back with the fall rains. Smallmouth are on, though."
+            line = "Steelhead have left for the summer — back with the fall rains. Smallmouth are on, though."
         }
+        if river.isIndicatorGauge {
+            line += " (\(river.shortName) has no direct gauge — clarity is read from Brandy Run, the local rain indicator.)"
+        }
+        return line
     }
 }
 

@@ -5,11 +5,18 @@ import SwiftUI
 struct ResultsView: View {
     let result: RigResult
     let method: Method
+    let river: River
+
+    /// Engine text is written for the Rocky River (and locked by golden
+    /// tests) — adapt names, flow bands, and landmarks for other rivers.
+    private func localized(_ text: String) -> String {
+        RiverText.localize(text, for: river)
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             // Lead headline
-            Text(result.why.headline)
+            Text(localized(result.why.headline))
                 .font(.headline)
                 .foregroundStyle(DriftLogicTheme.mist)
                 .fixedSize(horizontal: false, vertical: true)
@@ -117,7 +124,7 @@ struct ResultsView: View {
                     .foregroundStyle(DriftLogicTheme.mist)
                     .fixedSize(horizontal: false, vertical: true)
 
-                Text(pick.note)
+                Text(localized(pick.note))
                     .font(.footnote)
                     .foregroundStyle(DriftLogicTheme.mist.opacity(0.7))
                     .fixedSize(horizontal: false, vertical: true)
@@ -169,7 +176,7 @@ struct ResultsView: View {
                             .overlay(DriftLogicTheme.teal.opacity(0.2))
                             .padding(.vertical, 10)
                     }
-                    labeledRow(label: row.label, value: row.value, labelTint: DriftLogicTheme.teal)
+                    labeledRow(label: row.label, value: localized(row.value), labelTint: DriftLogicTheme.teal)
                 }
             }
         }
@@ -182,7 +189,7 @@ struct ResultsView: View {
         VStack(alignment: .leading, spacing: 8) {
             cardHeader("Pro Tip", systemImage: "bolt.fill", tint: DriftLogicTheme.gold)
 
-            Text(result.proTip)
+            Text(localized(result.proTip))
                 .font(.subheadline)
                 .foregroundStyle(DriftLogicTheme.mist.opacity(0.92))
                 .fixedSize(horizontal: false, vertical: true)
@@ -249,7 +256,8 @@ struct ResultsView: View {
                 proTip: "Dead-drift eggs and nymphs through the tailouts and keep your drift drag-free.",
                 videoIDs: []
             ),
-            method: .fly
+            method: .fly,
+            river: SteelheadAlley.defaultRiver
         )
         .padding()
     }

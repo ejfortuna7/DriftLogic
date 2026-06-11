@@ -5,6 +5,20 @@ import SwiftUI
 /// Single source of truth for the user's condition selections.
 @MainActor
 final class AppModel: ObservableObject {
+    /// Selected Steelhead Alley river — remembered across launches.
+    @Published var river: River {
+        didSet { UserDefaults.standard.set(river.id, forKey: "dl.selectedRiver") }
+    }
+
+    /// Whether the condition chips are expanded ("Customize conditions").
+    @Published var conditionsExpanded = false
+
+    init() {
+        let savedID = UserDefaults.standard.string(forKey: "dl.selectedRiver")
+        river = savedID.flatMap(SteelheadAlley.river(withID:)) ?? SteelheadAlley.defaultRiver
+        species = .steelhead   // it's Steelhead Alley — default the target
+    }
+
     @Published var method: Method? {
         didSet {
             // Hatch only applies to fly fishing — clear it when leaving fly.
@@ -70,18 +84,38 @@ final class AppModel: ObservableObject {
 
     func reset() {
         method = nil
-        species = nil
+        species = .steelhead
         current = nil
         depth = nil
         temp = nil
         clarity = nil
         hatch = nil
+        conditionsExpanded = false
     }
 
+    /// Clear the water-driven conditions (used when switching rivers, so one
+    /// river's live data never leaks onto another).
+    func clearWaterConditions() {
+        current = nil
+        temp = nil
+        clarity = nil
+    }
+
+    /// Force-apply the live readings (the banner button).
     func applyNowCast(current: CurrentSpeed?, clarity: WaterClarity?, temp: WaterTemp?) {
         if let current { self.current = current }
         if let clarity { self.clarity = clarity }
         if let temp { self.temp = temp }
+    }
+
+    /// Fill ONLY the unanswered conditions from the live gauge — runs after
+    /// the user picks a method, so customizations are never stomped.
+    /// Depth defaults to Mid (a gauge can't know where you're standing).
+    func autoApply(from service: NowCastService) {
+        if current == nil { current = service.suggestedCurrent }
+        if clarity == nil { clarity = service.suggestedClarity }
+        if temp == nil { temp = service.suggestedTemp }
+        if depth == nil { depth = .mid }
     }
 }
 
@@ -102,6 +136,8 @@ struct ContentView: View {
                     VStack(alignment: .leading, spacing: 18) {
                         header
 
+                        riverPicker
+
                         NowCastBanner(service: nowCast) { current, clarity, temp in
                             withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
                                 model.applyNowCast(current: current, clarity: clarity, temp: temp)
@@ -110,7 +146,14 @@ struct ContentView: View {
 
                         progressCard
 
-                        conditionSections
+                        gearSection
+
+                        customizeToggle
+
+                        if showConditionSections {
+                            conditionSections
+                                .transition(.opacity.combined(with: .move(edge: .top)))
+                        }
 
                         resultsSection
                             .id(resultsAnchor)
@@ -134,10 +177,132 @@ struct ContentView: View {
             }
         }
         .preferredColorScheme(.dark)
-        .task { await nowCast.load() }
+        .task { await nowCast.load(river: model.river) }
+        .onChange(of: model.river) { _, river in
+            // Fresh river, fresh water data — never carry one river's
+            // conditions onto another.
+            model.clearWaterConditions()
+            nowCast.reload(for: river)
+        }
+        .onChange(of: model.method) { _, method in
+            guard method != nil else { return }
+            autoApplyConditions()
+        }
+        .onChange(of: nowCast.phase) { _, phase in
+            guard phase == .loaded, model.method != nil else { return }
+            autoApplyConditions()
+        }
         .animation(.spring(response: 0.45, dampingFraction: 0.85), value: model.isComplete)
         .animation(.spring(response: 0.35, dampingFraction: 0.85), value: model.method)
+        .animation(.spring(response: 0.35, dampingFraction: 0.85), value: model.conditionsExpanded)
         .animation(.easeInOut(duration: 0.3), value: nowCast.phase)
+    }
+
+    /// River → gear → conditions auto-applied. Anything the gauge can't
+    /// provide stays unanswered and the chips open so the user can finish.
+    private func autoApplyConditions() {
+        withAnimation(.spring(response: 0.4, dampingFraction: 0.85)) {
+            if nowCast.phase == .loaded {
+                model.autoApply(from: nowCast)
+            }
+            if !model.isComplete {
+                model.conditionsExpanded = true
+            }
+        }
+    }
+
+    private var showConditionSections: Bool {
+        model.conditionsExpanded || nowCast.phase == .unavailable || nowCast.phase == .failed
+    }
+
+    // MARK: River picker
+
+    private var riverPicker: some View {
+        Menu {
+            ForEach(SteelheadAlley.groupedByState, id: \.state) { group in
+                Section(group.state) {
+                    ForEach(group.rivers) { river in
+                        Button {
+                            model.river = river
+                        } label: {
+                            if river.id == model.river.id {
+                                Label(river.name, systemImage: "checkmark")
+                            } else {
+                                Text(river.name)
+                            }
+                        }
+                    }
+                }
+            }
+        } label: {
+            HStack(spacing: 10) {
+                Image(systemName: "water.waves")
+                    .imageScale(.medium)
+                    .foregroundStyle(DriftLogicTheme.tealLight)
+                VStack(alignment: .leading, spacing: 1) {
+                    Text("RIVER")
+                        .font(.caption2.weight(.bold))
+                        .tracking(0.8)
+                        .foregroundStyle(DriftLogicTheme.mist.opacity(0.5))
+                    Text("\(model.river.name), \(model.river.state)")
+                        .font(.headline)
+                        .foregroundStyle(DriftLogicTheme.mist)
+                }
+                Spacer()
+                Image(systemName: "chevron.up.chevron.down")
+                    .imageScale(.small)
+                    .foregroundStyle(DriftLogicTheme.tealLight)
+            }
+            .driftLogicCard(accent: DriftLogicTheme.tealLight)
+        }
+        .accessibilityLabel("Selected river: \(model.river.name), \(model.river.state). Tap to change.")
+    }
+
+    // MARK: Customize conditions toggle
+
+    private var appliedSummary: String {
+        let parts = [
+            model.current.map(\.displayName),
+            model.depth.map(\.displayName),
+            model.temp.map(\.displayName),
+            model.clarity.map(\.displayName),
+        ].compactMap { $0 }
+        return parts.isEmpty ? "No conditions set yet" : parts.joined(separator: " · ")
+    }
+
+    private var customizeToggle: some View {
+        Button {
+            DriftLogicHaptics.tap()
+            model.conditionsExpanded.toggle()
+        } label: {
+            HStack(spacing: 10) {
+                Image(systemName: "slider.horizontal.3")
+                    .imageScale(.small)
+                    .foregroundStyle(DriftLogicTheme.tealLight)
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(model.conditionsExpanded ? "Customize conditions" : "Conditions")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(DriftLogicTheme.mist)
+                    if !model.conditionsExpanded {
+                        Text(appliedSummary)
+                            .font(.caption)
+                            .foregroundStyle(DriftLogicTheme.mist.opacity(0.6))
+                            .lineLimit(2)
+                    }
+                }
+                Spacer()
+                Image(systemName: model.conditionsExpanded ? "chevron.up" : "chevron.down")
+                    .imageScale(.small)
+                    .foregroundStyle(DriftLogicTheme.tealLight)
+            }
+            .driftLogicCard()
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(
+            model.conditionsExpanded
+                ? "Collapse condition pickers"
+                : "Customize conditions. Currently: \(appliedSummary)"
+        )
     }
 
     // MARK: Header
@@ -172,7 +337,7 @@ struct ContentView: View {
                     .font(DriftLogicTheme.scriptFont(size: 40))
                     .foregroundStyle(DriftLogicTheme.mist)
                     .shadow(color: .black.opacity(0.6), radius: 3, x: 0, y: 2)
-                Text("Rocky River rig builder — fly · spinning · center-pin")
+                Text("Steelhead Alley rig builder — fly · spin · center-pin")
                     .font(.caption.weight(.medium))
                     .tracking(0.4)
                     .foregroundStyle(DriftLogicTheme.tealLight)
@@ -185,7 +350,7 @@ struct ContentView: View {
                 .strokeBorder(DriftLogicTheme.teal.opacity(0.35), lineWidth: 1)
         }
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("DriftLogic. Rocky River rig builder.")
+        .accessibilityLabel("DriftLogic. Steelhead Alley rig builder.")
     }
 
     // MARK: Progress
@@ -263,7 +428,7 @@ struct ContentView: View {
 
     // MARK: Condition sections
 
-    private var conditionSections: some View {
+    private var gearSection: some View {
         VStack(alignment: .leading, spacing: 14) {
             conditionCard("Gear", systemImage: "figure.fishing") {
                 ConditionChipGrid(
@@ -280,7 +445,11 @@ struct ContentView: View {
                     title: \.displayName
                 )
             }
+        }
+    }
 
+    private var conditionSections: some View {
+        VStack(alignment: .leading, spacing: 14) {
             conditionCard("Current", systemImage: "water.waves") {
                 ConditionChipGrid(
                     options: Array(CurrentSpeed.allCases),
@@ -359,7 +528,7 @@ struct ContentView: View {
     private var resultsSection: some View {
         if let result = model.result, let scenario = model.scenario {
             VStack(alignment: .leading, spacing: 18) {
-                ResultsView(result: result, method: scenario.method)
+                ResultsView(result: result, method: scenario.method, river: model.river)
                 VideoSectionView(videoIDs: result.videoIDs)
             }
             .padding(.top, 6)
