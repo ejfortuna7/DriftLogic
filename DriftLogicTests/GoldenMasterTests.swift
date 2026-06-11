@@ -158,6 +158,34 @@ final class GoldenMasterTests: XCTestCase {
         }
     }
 
+    func testEveryPickHasCuratedAmazonQuery() throws {
+        // Pick names are rig descriptions, not product names — uncurated searches
+        // return towable boat tubes, WD-40 oil, etc. Every pick the engine can
+        // produce must have a hand-written Amazon query.
+        var names = Set<String>()
+        for entry in try loadGolden() {
+            for p in entry.picks { names.insert(decodeEntities(p.n)) }
+        }
+        let missing = names.filter { ShopLinks.amazonSearchOverrides[$0] == nil }
+        XCTAssertTrue(missing.isEmpty, "picks without a curated Amazon query: \(missing.sorted())")
+    }
+
+    func testRigRowsAlwaysOfferShopLinks() throws {
+        // Every rod/reel row should offer the three price tiers; line/leader/
+        // tippet/float rows a single link.
+        for entry in try loadGolden().prefix(300) {
+            let s = try scenario(from: entry.s)
+            for row in DriftLogicEngine.recommend(for: s).rig {
+                let options = RigShopLinks.options(forRowLabel: row.label, method: s.method, rowValue: row.value)
+                XCTAssertFalse(options.isEmpty, "rig row '\(row.label)' (\(s.method.rawValue)) has no shop links")
+                for o in options {
+                    XCTAssertTrue(o.url.absoluteString.hasPrefix("https://www.amazon.com/s?k="), "bad rig URL: \(o.url)")
+                    XCTAssertTrue(o.url.absoluteString.contains("tag=rockyriver-20"), "missing Associates tag: \(o.url)")
+                }
+            }
+        }
+    }
+
     func testShopURLsAreWellFormed() throws {
         for entry in try loadGolden().prefix(500) {
             let s = try scenario(from: entry.s)

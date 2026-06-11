@@ -43,11 +43,45 @@ struct ResultsView: View {
                             .overlay(DriftLogicTheme.teal.opacity(0.2))
                             .padding(.vertical, 10)
                     }
-                    labeledRow(label: row.label, value: row.value, labelTint: DriftLogicTheme.tealLight)
+                    rigRow(row)
+                }
+            }
+
+            Text("As an Amazon Associate, we earn from qualifying purchases.")
+                .font(.caption2)
+                .foregroundStyle(DriftLogicTheme.mist.opacity(0.45))
+        }
+        .driftLogicCard()
+    }
+
+    private func rigRow(_ row: RigRow) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            labeledRow(label: row.label, value: row.value, labelTint: DriftLogicTheme.tealLight)
+
+            let options = RigShopLinks.options(forRowLabel: row.label, method: method, rowValue: row.value)
+            if !options.isEmpty {
+                HStack(spacing: 8) {
+                    ForEach(options) { option in
+                        shopButton(option.tier, url: option.url, tint: tierTint(option.tier))
+                            .accessibilityLabel("\(option.hint) — shop on Amazon")
+                    }
+                    if options.count > 1 {
+                        Text("price point")
+                            .font(.caption2)
+                            .foregroundStyle(DriftLogicTheme.mist.opacity(0.4))
+                    }
                 }
             }
         }
-        .driftLogicCard()
+    }
+
+    private func tierTint(_ tier: String) -> Color {
+        switch tier {
+        case "$": return DriftLogicTheme.teal
+        case "$$": return DriftLogicTheme.tealLight
+        case "$$$": return DriftLogicTheme.gold
+        default: return DriftLogicTheme.orange
+        }
     }
 
     // MARK: Top 5 Picks
