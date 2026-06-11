@@ -90,7 +90,8 @@ struct ResultsView: View {
 
                 HStack(spacing: 8) {
                     shopButton("Amazon", url: ShopLinks.amazonURL(for: pick.name), tint: DriftLogicTheme.orange)
-                    shopButton("FishUSA", url: ShopLinks.fishUSAURL(for: pick.name), tint: DriftLogicTheme.tealLight)
+                    // FishUSA button removed for now — re-add with:
+                    // shopButton("FishUSA", url: ShopLinks.fishUSAURL(for: pick.name), tint: DriftLogicTheme.tealLight)
                 }
                 .padding(.top, 2)
             }
