@@ -7,7 +7,6 @@ import SwiftUI
 /// - No gauge (Walnut, Ashtabula): says so, and points to manual conditions.
 struct NowCastBanner: View {
     @ObservedObject var service: NowCastService
-    var onApply: (CurrentSpeed?, WaterClarity?, WaterTemp?) -> Void
 
     var body: some View {
         switch service.phase {
@@ -94,27 +93,9 @@ struct NowCastBanner: View {
                 .foregroundStyle(DriftLogicTheme.mist.opacity(0.8))
                 .fixedSize(horizontal: false, vertical: true)
 
-            Button {
-                DriftLogicHaptics.tap()
-                onApply(service.suggestedCurrent, service.suggestedClarity, service.suggestedTemp)
-            } label: {
-                Label("Apply to conditions", systemImage: "wand.and.stars")
-                    .font(.subheadline.weight(.semibold))
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 10)
-                    .foregroundStyle(DriftLogicTheme.navy)
-                    .background {
-                        Capsule(style: .continuous)
-                            .fill(
-                                LinearGradient(
-                                    colors: [DriftLogicTheme.tealLight, DriftLogicTheme.teal],
-                                    startPoint: .top,
-                                    endPoint: .bottom
-                                )
-                            )
-                    }
-            }
-            .buttonStyle(.plain)
+            Label("Applied to your conditions automatically", systemImage: "checkmark.circle.fill")
+                .font(.caption2)
+                .foregroundStyle(DriftLogicTheme.tealLight.opacity(0.7))
         }
         .driftLogicCard(accent: DriftLogicTheme.tealLight)
         .transition(.opacity.combined(with: .move(edge: .top)))
@@ -167,7 +148,7 @@ struct NowCastBanner: View {
 }
 
 #Preview("NowCast banner") {
-    NowCastBanner(service: NowCastService()) { _, _, _ in }
+    NowCastBanner(service: NowCastService())
         .padding()
         .background(DriftLogicTheme.navy)
         .preferredColorScheme(.dark)

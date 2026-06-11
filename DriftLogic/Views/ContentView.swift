@@ -101,15 +101,8 @@ final class AppModel: ObservableObject {
         clarity = nil
     }
 
-    /// Force-apply the live readings (the banner button).
-    func applyNowCast(current: CurrentSpeed?, clarity: WaterClarity?, temp: WaterTemp?) {
-        if let current { self.current = current }
-        if let clarity { self.clarity = clarity }
-        if let temp { self.temp = temp }
-    }
-
-    /// Fill ONLY the unanswered conditions from the live gauge — runs after
-    /// the user picks a method, so customizations are never stomped.
+    /// Fill ONLY the unanswered conditions from the live gauge — runs as soon
+    /// as the gauge loads, and never stomps a user's customizations.
     /// Depth defaults to Mid (a gauge can't know where you're standing).
     func autoApply(from service: NowCastService) {
         if current == nil { current = service.suggestedCurrent }
@@ -138,11 +131,7 @@ struct ContentView: View {
 
                         riverPicker
 
-                        NowCastBanner(service: nowCast) { current, clarity, temp in
-                            withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
-                                model.applyNowCast(current: current, clarity: clarity, temp: temp)
-                            }
-                        }
+                        NowCastBanner(service: nowCast)
 
                         progressCard
 
@@ -189,7 +178,9 @@ struct ContentView: View {
             autoApplyConditions()
         }
         .onChange(of: nowCast.phase) { _, phase in
-            guard phase == .loaded, model.method != nil else { return }
+            // Conditions populate the moment the river's gauge answers —
+            // no button, no waiting for a gear pick.
+            guard phase == .loaded else { return }
             autoApplyConditions()
         }
         .animation(.spring(response: 0.45, dampingFraction: 0.85), value: model.isComplete)
@@ -198,14 +189,15 @@ struct ContentView: View {
         .animation(.easeInOut(duration: 0.3), value: nowCast.phase)
     }
 
-    /// River → gear → conditions auto-applied. Anything the gauge can't
-    /// provide stays unanswered and the chips open so the user can finish.
+    /// River → conditions auto-applied. Anything the gauge can't provide
+    /// stays unanswered; the chips pop open once the user is building
+    /// (gear picked) and something is still missing.
     private func autoApplyConditions() {
         withAnimation(.spring(response: 0.4, dampingFraction: 0.85)) {
             if nowCast.phase == .loaded {
                 model.autoApply(from: nowCast)
             }
-            if !model.isComplete {
+            if model.method != nil, !model.isComplete {
                 model.conditionsExpanded = true
             }
         }
