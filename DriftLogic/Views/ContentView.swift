@@ -135,11 +135,14 @@ struct ContentView: View {
                     VStack(alignment: .leading, spacing: 18) {
                         header
 
+                        if model.method != nil || model.showResults {
+                            resetRow
+                                .transition(.opacity)
+                        }
+
                         riverPicker
 
                         NowCastBanner(service: nowCast, sky: sky)
-
-                        progressCard
 
                         gearSection
 
@@ -368,77 +371,36 @@ struct ContentView: View {
         .accessibilityLabel("DriftLogic. Steelhead Alley rig builder.")
     }
 
-    // MARK: Progress
+    // MARK: Reset
 
+    /// Used only for the GO button's accessibility hint now that the progress
+    /// card is gone — names what's still missing.
     private var remainingLabel: String {
         let missing = model.missingLabels
         if missing.isEmpty { return "Your rig is ready" }
         if missing.count == AppModel.requiredCount { return "\(missing.count) answers to go" }
-        // Name what's missing so nobody is left hunting for the last chip.
         return "Still need: \(missing.joined(separator: " · "))"
     }
 
-    private var progressCard: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                Label {
-                    Text(remainingLabel)
-                        .font(.footnote.weight(.semibold))
-                        .foregroundStyle(
-                            model.isComplete
-                                ? DriftLogicTheme.tealLight
-                                : DriftLogicTheme.mist.opacity(0.85)
-                        )
-                        .contentTransition(.numericText())
-                } icon: {
-                    Image(systemName: model.isComplete ? "checkmark.circle.fill" : "slider.horizontal.3")
-                        .imageScale(.small)
-                        .foregroundStyle(DriftLogicTheme.tealLight)
+    /// A quiet top-right "Start over" control. Shows only once the angler has
+    /// engaged (picked gear or built a rig) — it's out of the content flow,
+    /// not parked in the middle of the screen.
+    private var resetRow: some View {
+        HStack {
+            Spacer()
+            Button {
+                DriftLogicHaptics.tap()
+                withAnimation(.spring(response: 0.4, dampingFraction: 0.85)) {
+                    model.reset()
                 }
-
-                Spacer()
-
-                if model.filledCount > 0 {
-                    Button {
-                        DriftLogicHaptics.tap()
-                        withAnimation(.spring(response: 0.4, dampingFraction: 0.85)) {
-                            model.reset()
-                        }
-                    } label: {
-                        Label("Reset", systemImage: "arrow.counterclockwise")
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(DriftLogicTheme.salmon)
-                    }
-                    .buttonStyle(.plain)
-                    .transition(.opacity)
-                }
+            } label: {
+                Label("Start over", systemImage: "arrow.counterclockwise")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(DriftLogicTheme.salmon)
             }
-
-            GeometryReader { geo in
-                ZStack(alignment: .leading) {
-                    Capsule()
-                        .fill(Color.white.opacity(0.08))
-                    Capsule()
-                        .fill(
-                            LinearGradient(
-                                colors: [DriftLogicTheme.teal, DriftLogicTheme.tealLight],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                        .frame(
-                            width: geo.size.width
-                                * CGFloat(model.filledCount)
-                                / CGFloat(AppModel.requiredCount)
-                        )
-                }
-            }
-            .frame(height: 6)
-            .animation(.spring(response: 0.4, dampingFraction: 0.85), value: model.filledCount)
+            .buttonStyle(.plain)
+            .accessibilityLabel("Start over — clear your selections")
         }
-        .driftLogicCard()
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(model.filledCount) of \(AppModel.requiredCount) conditions set. \(remainingLabel)")
     }
 
     // MARK: Condition sections
