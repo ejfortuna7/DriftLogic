@@ -36,6 +36,9 @@ final class NowCastService: ObservableObject {
     @Published private(set) var stageFt: Double?
     @Published private(set) var turbidityFNU: Double?
 
+    /// Timestamp of the newest reading shown — drives the "as of" freshness stamp.
+    @Published private(set) var observedAt: Date?
+
     /// Suggested condition bands (nil when the underlying reading is missing).
     @Published private(set) var suggestedCurrent: CurrentSpeed?
     @Published private(set) var suggestedClarity: WaterClarity?
@@ -88,16 +91,22 @@ final class NowCastService: ObservableObject {
 
     private func resetReadings() {
         cfs = nil; tempF = nil; stageFt = nil; turbidityFNU = nil
+        observedAt = nil
         suggestedCurrent = nil; suggestedClarity = nil; suggestedTemp = nil
     }
 
     private func apply(_ payload: USGSResponse, for river: River) {
         let cutoff = Date().addingTimeInterval(-freshnessWindow)
 
-        let cfs = payload.freshestValue(forParameter: "00060", notBefore: cutoff)
-        let tempC = payload.freshestValue(forParameter: "00010", notBefore: cutoff)
-        let stage = payload.freshestValue(forParameter: "00065", notBefore: cutoff)
-        let turbidity = payload.freshestValue(forParameter: "63680", notBefore: cutoff)
+        let cfsObs = payload.freshestObservation(forParameter: "00060", notBefore: cutoff)
+        let tempCObs = payload.freshestObservation(forParameter: "00010", notBefore: cutoff)
+        let stageObs = payload.freshestObservation(forParameter: "00065", notBefore: cutoff)
+        let turbidityObs = payload.freshestObservation(forParameter: "63680", notBefore: cutoff)
+
+        let cfs = cfsObs?.value
+        let tempC = tempCObs?.value
+        let stage = stageObs?.value
+        let turbidity = turbidityObs?.value
         let tempF: Int? = tempC.map { Int(($0 * 9 / 5 + 32).rounded()) }
 
         guard cfs != nil || tempF != nil || turbidity != nil || stage != nil else {
@@ -109,6 +118,9 @@ final class NowCastService: ObservableObject {
         self.tempF = tempF
         self.stageFt = stage
         self.turbidityFNU = turbidity
+        self.observedAt = [cfsObs?.date, tempCObs?.date, stageObs?.date, turbidityObs?.date]
+            .compactMap { $0 }
+            .max()
 
         // Clarity: fresh turbidity sensor first, then per-river cfs bands.
         if let turbidity {
@@ -184,11 +196,12 @@ private struct USGSResponse: Decodable {
         isoFractional.date(from: s) ?? iso.date(from: s)
     }
 
-    /// Newest reading for a parameter across ALL value blocks (stations can
-    /// expose several methods/sensors per parameter), discarding the USGS
-    /// missing-data sentinel and anything older than `notBefore`. This is
-    /// the freshness guard that keeps dead/seasonal sensors out of the UI.
-    func freshestValue(forParameter code: String, notBefore cutoff: Date) -> Double? {
+    /// Newest reading (value + timestamp) for a parameter across ALL value
+    /// blocks (stations can expose several methods/sensors per parameter),
+    /// discarding the USGS missing-data sentinel and anything older than
+    /// `notBefore`. This is the freshness guard that keeps dead/seasonal
+    /// sensors out of the UI.
+    func freshestObservation(forParameter code: String, notBefore cutoff: Date) -> (date: Date, value: Double)? {
         var best: (date: Date, value: Double)?
         for series in value.timeSeries where series.variable.variableCode.first?.value == code {
             for block in series.values {
@@ -204,6 +217,6 @@ private struct USGSResponse: Decodable {
                 }
             }
         }
-        return best?.value
+        return best
     }
 }

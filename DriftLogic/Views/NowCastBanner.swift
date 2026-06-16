@@ -1,17 +1,23 @@
 import SwiftUI
 
-/// Live-gauge banner for the selected river. Three honest states:
-/// - Direct gauge: live readout (cfs · stage · °F · clarity) + apply button.
-/// - Indicator gauge (Elk via Brandy Run): clarity read only, clearly labeled —
-///   the indicator's cfs is never presented as the river's own flow.
-/// - No gauge (Walnut, Ashtabula): says so, and points to manual conditions.
+/// Live-conditions banner for the selected river. Reads two sources:
+/// - `service` (USGS): flow, stage, water temp, turbidity/clarity.
+/// - `sky` (Open-Meteo): air temperature + sunrise/sunset → time-of-day light.
+///
+/// Three honest states:
+/// - Direct gauge: labeled metric grid (Flow · Stage · Water · Air · Clarity)
+///   plus a Time/Light row, with an "as of" freshness stamp.
+/// - Indicator gauge (Elk via Brandy Run): clarity inference only, clearly
+///   labeled — the indicator's cfs is never presented as the river's own flow.
+/// - No gauge (Walnut, Ashtabula): air + time still shown (weather needs no
+///   USGS station), with a prompt to set conditions manually.
 struct NowCastBanner: View {
     @ObservedObject var service: NowCastService
+    @ObservedObject var sky: SkyService
 
     var body: some View {
         switch service.phase {
         case .idle, .failed:
-            // Graceful hidden state — no banner, no error chrome.
             EmptyView()
         case .loading:
             loadingRow
@@ -42,7 +48,7 @@ struct NowCastBanner: View {
     // MARK: No gauge
 
     private var unavailableCard: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 12) {
             Label {
                 Text("No live gauge on \(river.name)")
                     .font(.subheadline.weight(.bold))
@@ -52,6 +58,13 @@ struct NowCastBanner: View {
                     .imageScale(.small)
                     .foregroundStyle(DriftLogicTheme.salmon)
             }
+
+            // Weather works anywhere — show air + time even with no USGS station.
+            if !skyTiles.isEmpty {
+                metricGrid(skyTiles)
+            }
+            lightRow
+
             Text("USGS doesn't monitor this creek. Eyeball the water and set conditions below — DriftLogic does the rest.")
                 .font(.footnote)
                 .foregroundStyle(DriftLogicTheme.mist.opacity(0.75))
@@ -83,72 +96,181 @@ struct NowCastBanner: View {
                     .foregroundStyle(DriftLogicTheme.tealLight.opacity(0.8))
             }
 
-            Text(readout)
-                .font(.title3.weight(.bold))
-                .foregroundStyle(DriftLogicTheme.tealLight)
-                .fixedSize(horizontal: false, vertical: true)
+            metricGrid(loadedTiles)
+
+            lightRow
+
+            if river.isIndicatorGauge {
+                Text(indicatorNote)
+                    .font(.caption)
+                    .foregroundStyle(DriftLogicTheme.mist.opacity(0.65))
+                    .fixedSize(horizontal: false, vertical: true)
+            }
 
             Text(statusLine)
                 .font(.footnote)
                 .foregroundStyle(DriftLogicTheme.mist.opacity(0.8))
                 .fixedSize(horizontal: false, vertical: true)
 
-            Label("Applied to your conditions automatically", systemImage: "checkmark.circle.fill")
-                .font(.caption2)
-                .foregroundStyle(DriftLogicTheme.tealLight.opacity(0.7))
+            HStack(spacing: 4) {
+                Image(systemName: "checkmark.circle.fill")
+                Text(freshnessLine)
+            }
+            .font(.caption2)
+            .foregroundStyle(DriftLogicTheme.tealLight.opacity(0.7))
         }
         .driftLogicCard(accent: DriftLogicTheme.tealLight)
         .transition(.opacity.combined(with: .move(edge: .top)))
     }
 
-    /// Direct: "Rocky now: 228 cfs · 5.9 ft · 81°F · Clear"
-    /// Indicator: "Brandy Run indicator: 4 cfs — Elk likely clear"
-    private var readout: String {
-        if river.isIndicatorGauge {
-            var s = "Brandy Run indicator"
-            if let cfs = service.cfs { s += ": \(formatted(cfs)) cfs" }
-            if let clarity = service.suggestedClarity {
-                s += " — \(river.shortName) likely \(clarity.displayName.lowercased())"
-            }
-            return s
-        }
+    // MARK: Metric tiles
 
-        var parts: [String] = []
-        if let cfs = service.cfs { parts.append("\(formatted(cfs)) cfs") }
-        if let stage = service.stageFt { parts.append(String(format: "%.1f ft", stage)) }
-        if let tempF = service.tempF { parts.append("\(tempF)°F") }
-        if let turbidity = service.turbidityFNU { parts.append("\(formatted(turbidity)) FNU") }
-        if let clarity = service.suggestedClarity { parts.append(clarity.displayName) }
-        return "\(river.shortName) now: " + parts.joined(separator: " · ")
+    private struct Metric: Identifiable {
+        let id = UUID()
+        let label: String
+        let value: String
+        let systemImage: String
+    }
+
+    /// Water metrics for a directly gauged river. Indicator rivers skip Flow
+    /// (their cfs isn't this river's own) and lean on the clarity inference.
+    private var loadedTiles: [Metric] {
+        var tiles: [Metric] = []
+        if !river.isIndicatorGauge, let cfs = service.cfs {
+            tiles.append(Metric(label: "FLOW", value: "\(formatted(cfs)) cfs", systemImage: "water.waves"))
+        }
+        if let stage = service.stageFt {
+            tiles.append(Metric(label: "STAGE", value: String(format: "%.1f ft", stage), systemImage: "ruler"))
+        }
+        if let tempF = service.tempF {
+            tiles.append(Metric(label: "WATER", value: "\(tempF)°F", systemImage: "thermometer.medium"))
+        }
+        tiles.append(contentsOf: skyTiles)
+        if let clarity = service.suggestedClarity {
+            tiles.append(Metric(label: "CLARITY", value: clarity.displayName, systemImage: "eye"))
+        }
+        return tiles
+    }
+
+    /// Air temperature — shown on every river (gauged or not).
+    private var skyTiles: [Metric] {
+        guard let air = sky.airTempF else { return [] }
+        return [Metric(label: "AIR", value: "\(air)°F", systemImage: "cloud.sun")]
+    }
+
+    private func metricGrid(_ metrics: [Metric]) -> some View {
+        LazyVGrid(
+            columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 3),
+            spacing: 8
+        ) {
+            ForEach(metrics) { m in
+                VStack(alignment: .leading, spacing: 3) {
+                    HStack(spacing: 4) {
+                        Image(systemName: m.systemImage)
+                            .font(.caption2)
+                            .foregroundStyle(DriftLogicTheme.tealLight)
+                        Text(m.label)
+                            .font(.caption2.weight(.bold))
+                            .tracking(0.5)
+                            .foregroundStyle(DriftLogicTheme.mist.opacity(0.55))
+                    }
+                    Text(m.value)
+                        .font(.subheadline.weight(.bold))
+                        .foregroundStyle(DriftLogicTheme.mist)
+                        .minimumScaleFactor(0.8)
+                        .lineLimit(1)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.vertical, 8)
+                .padding(.horizontal, 10)
+                .background {
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .fill(Color.white.opacity(0.05))
+                }
+            }
+        }
+    }
+
+    // MARK: Time / light row
+
+    private var lightRow: some View {
+        let phase = sky.lightPhase
+        return HStack(spacing: 8) {
+            Image(systemName: phase.systemImage)
+                .font(.subheadline)
+                .foregroundStyle(DriftLogicTheme.gold)
+            Text("\(clockNow) · \(phase.displayName)")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(DriftLogicTheme.mist)
+            Text("— \(phase.lightNote)")
+                .font(.caption)
+                .foregroundStyle(DriftLogicTheme.mist.opacity(0.6))
+            Spacer(minLength: 0)
+        }
+        .padding(.vertical, 8)
+        .padding(.horizontal, 10)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background {
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                .fill(DriftLogicTheme.gold.opacity(0.10))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .strokeBorder(DriftLogicTheme.gold.opacity(0.25), lineWidth: 1)
+                }
+        }
+    }
+
+    // MARK: Strings
+
+    private var indicatorNote: String {
+        var s = "Brandy Run indicator"
+        if let cfs = service.cfs { s += ": \(formatted(cfs)) cfs" }
+        if let clarity = service.suggestedClarity {
+            s += " — \(river.shortName) likely \(clarity.displayName.lowercased())"
+        }
+        s += ". (\(river.shortName) has no direct gauge — clarity is read from Brandy Run, the local rain indicator.)"
+        return s
     }
 
     private func formatted(_ v: Double) -> String {
         v >= 100 ? String(Int(v.rounded())) : String(format: "%.1f", v)
     }
 
+    private var clockNow: String {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "en_US")
+        f.dateFormat = "h:mm a"
+        return f.string(from: Date())
+    }
+
+    private var freshnessLine: String {
+        if let observed = service.observedAt {
+            let f = DateFormatter()
+            f.locale = Locale(identifier: "en_US")
+            f.dateFormat = "h:mm a"
+            let stamp = f.string(from: observed)
+            return "Gauge as of \(stamp) · air & light live · applied automatically"
+        }
+        return "Applied to your conditions automatically"
+    }
+
     private var statusLine: String {
-        var line: String
         if service.steelheadOn {
             switch service.suggestedTemp {
             case .frigid, .cold:
-                line = "Steelhead are on. Cold water — dead-drift eggs and beads, slow and deep."
+                return "Steelhead are on. Cold water — dead-drift eggs and beads, slow and deep."
             case .prime:
-                line = "Steelhead are on. Prime water — they'll chase a swung fly or lure."
+                return "Steelhead are on. Prime water — they'll chase a swung fly or lure."
             default:
-                line = "Steelhead are on. They're in the river right now."
+                return "Steelhead are on. They're in the river right now."
             }
-        } else {
-            line = "Steelhead have left for the summer — back with the fall rains. Smallmouth are on, though."
         }
-        if river.isIndicatorGauge {
-            line += " (\(river.shortName) has no direct gauge — clarity is read from Brandy Run, the local rain indicator.)"
-        }
-        return line
+        return "Steelhead have left for the summer — back with the fall rains. Smallmouth are on, though."
     }
 }
 
 #Preview("NowCast banner") {
-    NowCastBanner(service: NowCastService())
+    NowCastBanner(service: NowCastService(), sky: SkyService())
         .padding()
         .background(DriftLogicTheme.navy)
         .preferredColorScheme(.dark)

@@ -34,6 +34,13 @@ struct River: Identifiable, Hashable {
     let clearBelowCfs: Double?
     let stainedBelowCfs: Double?
 
+    /// Representative coordinates (gauge or town) for the river. Used for the
+    /// air-temperature + sunrise/sunset lookup — works even on ungauged rivers,
+    /// since weather doesn't depend on a USGS station. All Alley tribs are in
+    /// the America/New_York time zone.
+    let latitude: Double
+    let longitude: Double
+
     var siteID: String? {
         switch gauge {
         case .direct(let id), .indicator(let id, _): return id
@@ -60,43 +67,50 @@ enum SteelheadAlley {
             id: "vermilion", name: "Vermilion River", shortName: "Vermilion", state: "OH",
             gauge: .direct(siteID: "04199500"), gaugeName: "USGS Vermilion",
             // Live: cfs, stage. Temp + turbidity sensors are seasonal (stale in summer).
-            primeFlowLow: 100, primeFlowHigh: 300, clearBelowCfs: 250, stainedBelowCfs: 500
+            primeFlowLow: 100, primeFlowHigh: 300, clearBelowCfs: 250, stainedBelowCfs: 500,
+            latitude: 41.392, longitude: -82.363
         ),
         River(
             id: "rocky", name: "Rocky River", shortName: "Rocky", state: "OH",
             gauge: .direct(siteID: "04201500"), gaugeName: "USGS Berea",
             // Live: cfs, temp, stage. The original DriftLogic river.
-            primeFlowLow: 150, primeFlowHigh: 250, clearBelowCfs: 250, stainedBelowCfs: 500
+            primeFlowLow: 150, primeFlowHigh: 250, clearBelowCfs: 250, stainedBelowCfs: 500,
+            latitude: 41.406, longitude: -81.889
         ),
         River(
             id: "cuyahoga", name: "Cuyahoga River (lower)", shortName: "Cuyahoga", state: "OH",
             gauge: .direct(siteID: "04208000"), gaugeName: "USGS Independence",
             // Live: cfs, temp, stage. Big water — bands scaled accordingly.
-            primeFlowLow: 800, primeFlowHigh: 1500, clearBelowCfs: 900, stainedBelowCfs: 1800
+            primeFlowLow: 800, primeFlowHigh: 1500, clearBelowCfs: 900, stainedBelowCfs: 1800,
+            latitude: 41.393, longitude: -81.631
         ),
         River(
             id: "chagrin", name: "Chagrin River", shortName: "Chagrin", state: "OH",
             gauge: .direct(siteID: "04209000"), gaugeName: "USGS Willoughby",
             // Live: cfs, stage. No temperature sensor at this station.
-            primeFlowLow: 150, primeFlowHigh: 350, clearBelowCfs: 300, stainedBelowCfs: 600
+            primeFlowLow: 150, primeFlowHigh: 350, clearBelowCfs: 300, stainedBelowCfs: 600,
+            latitude: 41.640, longitude: -81.406
         ),
         River(
             id: "grand", name: "Grand River", shortName: "Grand", state: "OH",
             gauge: .direct(siteID: "04212100"), gaugeName: "USGS Painesville",
             // Live: cfs, temp, stage. Slow to clear after rain.
-            primeFlowLow: 300, primeFlowHigh: 700, clearBelowCfs: 450, stainedBelowCfs: 900
+            primeFlowLow: 300, primeFlowHigh: 700, clearBelowCfs: 450, stainedBelowCfs: 900,
+            latitude: 41.726, longitude: -81.235
         ),
         River(
             id: "ashtabula", name: "Ashtabula River", shortName: "Ashtabula", state: "OH",
             gauge: .none, gaugeName: nil,
             // No active USGS station — manual conditions.
-            primeFlowLow: nil, primeFlowHigh: nil, clearBelowCfs: nil, stainedBelowCfs: nil
+            primeFlowLow: nil, primeFlowHigh: nil, clearBelowCfs: nil, stainedBelowCfs: nil,
+            latitude: 41.865, longitude: -80.790
         ),
         River(
             id: "conneaut", name: "Conneaut Creek", shortName: "Conneaut", state: "OH",
             gauge: .direct(siteID: "04213000"), gaugeName: "USGS Conneaut",
             // Live: cfs, stage. No temperature sensor.
-            primeFlowLow: 100, primeFlowHigh: 300, clearBelowCfs: 250, stainedBelowCfs: 500
+            primeFlowLow: 100, primeFlowHigh: 300, clearBelowCfs: 250, stainedBelowCfs: 500,
+            latitude: 41.940, longitude: -80.554
         ),
         River(
             id: "elk", name: "Elk Creek", shortName: "Elk", state: "PA",
@@ -105,19 +119,22 @@ enum SteelheadAlley {
             // Elk has no direct gauge; Brandy Run is the local rain/mud
             // indicator. Thresholds are on Brandy Run's small-stream scale,
             // clarity inference only — never shown as Elk's own flow.
-            primeFlowLow: nil, primeFlowHigh: nil, clearBelowCfs: 8, stainedBelowCfs: 25
+            primeFlowLow: nil, primeFlowHigh: nil, clearBelowCfs: 8, stainedBelowCfs: 25,
+            latitude: 42.020, longitude: -80.366
         ),
         River(
             id: "walnut", name: "Walnut Creek", shortName: "Walnut", state: "PA",
             gauge: .none, gaugeName: nil,
-            primeFlowLow: nil, primeFlowHigh: nil, clearBelowCfs: nil, stainedBelowCfs: nil
+            primeFlowLow: nil, primeFlowHigh: nil, clearBelowCfs: nil, stainedBelowCfs: nil,
+            latitude: 42.030, longitude: -80.255
         ),
         River(
             id: "cattaraugus", name: "Cattaraugus Creek", shortName: "Cattaraugus", state: "NY",
             gauge: .direct(siteID: "04213500"), gaugeName: "USGS Gowanda",
             // Live: cfs, temp, stage, AND turbidity — clarity uses the real
             // turbidity sensor here. Big glacial-clay drainage.
-            primeFlowLow: 300, primeFlowHigh: 700, clearBelowCfs: 500, stainedBelowCfs: 1200
+            primeFlowLow: 300, primeFlowHigh: 700, clearBelowCfs: 500, stainedBelowCfs: 1200,
+            latitude: 42.464, longitude: -78.936
         ),
     ]
 

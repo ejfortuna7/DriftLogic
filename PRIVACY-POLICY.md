@@ -6,7 +6,7 @@ DriftLogic does not collect, store, or share any personal information. Period.
 
 **No accounts, no tracking.** The app has no sign-up, no analytics, no advertising SDKs, and no third-party tracking of any kind.
 
-**Network requests.** To show live river conditions, the app makes anonymous requests to the U.S. Geological Survey's public water-data service (waterservices.usgs.gov) for the river you select. To display video thumbnails, it loads images from YouTube's public image servers. These requests contain no personal information — only the river gauge ID or video ID being requested. Nothing about you or your device is transmitted by DriftLogic.
+**Network requests.** To show live river conditions, the app makes anonymous requests to the U.S. Geological Survey's public water-data service (waterservices.usgs.gov) for the river you select. To show the current air temperature and sunrise/sunset for that river, it makes an anonymous request to Open-Meteo's public weather service (open-meteo.com) using the river's fixed coordinates — never your device's location. To display video thumbnails, it loads images from YouTube's public image servers. These requests contain no personal information — only the river gauge ID, the selected river's coordinates, or the video ID being requested. Nothing about you or your device is transmitted by DriftLogic.
 
 **Your selections stay on your phone.** Your chosen river and condition preferences are stored only on your device and never leave it.
 

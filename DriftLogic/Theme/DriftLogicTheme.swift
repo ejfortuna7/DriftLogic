@@ -27,6 +27,8 @@ enum DriftLogicTheme {
     static let mist = Color(red: 240 / 255, green: 245 / 255, blue: 250 / 255)
     /// #c4a046 — gold accents (pro tip, fly bullets)
     static let gold = Color(red: 196 / 255, green: 160 / 255, blue: 70 / 255)
+    /// #2fb86b — "Go / Build my rig" action green
+    static let go = Color(red: 47 / 255, green: 184 / 255, blue: 107 / 255)
 
     /// Full-screen background: deep navy with a faint teal-to-salmon wash.
     static var screenBackground: some View {
