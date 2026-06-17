@@ -351,9 +351,9 @@ struct ContentView: View {
                 }
 
             VStack(alignment: .leading, spacing: 2) {
-                Text("DriftLogic")
-                    .font(DriftLogicTheme.scriptFont(size: 40))
-                    .foregroundStyle(DriftLogicTheme.mist)
+                (Text("Drift").foregroundColor(DriftLogicTheme.mist)
+                    + Text("Logic").foregroundColor(DriftLogicTheme.gold))
+                    .font(.system(size: 38, design: .serif).weight(.heavy))
                     .shadow(color: .black.opacity(0.6), radius: 3, x: 0, y: 2)
                 Text("Steelhead Alley rig builder — fly · spin · center-pin")
                     .font(.caption.weight(.medium))
